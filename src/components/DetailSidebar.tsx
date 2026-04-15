@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { createPortal } from 'react-dom';
 import type { MindmapNodeData, NodeCategory, NodeContentBlock } from '@/data/mindmapTypes';
 
 const categoryLabels: Record<NodeCategory, string> = {
@@ -143,9 +144,14 @@ export default function DetailSidebar({ node, onClose }: Readonly<Props>) {
 
   const page = useMemo(() => pages[pageIndex], [pages, pageIndex]);
 
-  const showPopup = node?.interaction?.mode === 'popup';
+  if (typeof document === 'undefined') {
+    return null;
+  }
+
+  // Unified UX: always render node content as popup.
+  const showPopup = true;
   const panelClassName = showPopup
-    ? 'fixed top-1/2 left-1/2 z-50 w-[780px] max-w-[92vw] max-h-[85vh] -translate-x-1/2 -translate-y-1/2 rounded-2xl bg-card shadow-2xl flex flex-col border border-border'
+    ? 'pointer-events-auto z-50 w-[94vw] md:w-[70vw] h-[82vh] md:h-[70vh] max-w-[1200px] max-h-[900px] rounded-2xl bg-card shadow-2xl flex flex-col border border-border'
     : 'fixed top-0 right-0 h-full w-[420px] max-w-[90vw] z-50 bg-card shadow-2xl flex flex-col border-l border-border';
 
   const panelAnimation = showPopup
@@ -160,7 +166,7 @@ export default function DetailSidebar({ node, onClose }: Readonly<Props>) {
         exit: { x: '100%', opacity: 0 },
       };
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {node && (
         <>
@@ -171,13 +177,14 @@ export default function DetailSidebar({ node, onClose }: Readonly<Props>) {
             className="fixed inset-0 z-40 bg-foreground/20"
             onClick={onClose}
           />
-          <motion.div
-            initial={panelAnimation.initial}
-            animate={panelAnimation.animate}
-            exit={panelAnimation.exit}
-            transition={{ type: 'spring', damping: 28, stiffness: 280 }}
-            className={panelClassName}
-          >
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 md:p-6 pointer-events-none">
+            <motion.div
+              initial={panelAnimation.initial}
+              animate={panelAnimation.animate}
+              exit={panelAnimation.exit}
+              transition={{ type: 'spring', damping: 28, stiffness: 280 }}
+              className={panelClassName}
+            >
             <div className="flex items-center justify-between px-5 py-4 border-b border-border">
               <div className="flex items-center gap-2.5">
                 <div
@@ -192,7 +199,7 @@ export default function DetailSidebar({ node, onClose }: Readonly<Props>) {
                 <X size={16} className="text-muted-foreground" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto px-5 py-5">
+            <div className="flex-1 min-h-0 overflow-y-auto px-5 py-5">
               <div
                 className="border-l-[3px] pl-4 mb-5"
                 style={{ borderColor: categoryColors[node.category] }}
@@ -219,7 +226,7 @@ export default function DetailSidebar({ node, onClose }: Readonly<Props>) {
             </div>
 
             {pages.length > 1 && (
-              <div className="flex items-center justify-between px-5 py-3 border-t border-border bg-card/80 backdrop-blur">
+              <div className="shrink-0 flex items-center justify-between px-5 py-3 border-t border-border bg-card/80 backdrop-blur">
                 <button
                   type="button"
                   onClick={() => setPageIndex((prev) => Math.max(0, prev - 1))}
@@ -240,9 +247,11 @@ export default function DetailSidebar({ node, onClose }: Readonly<Props>) {
                 </button>
               </div>
             )}
-          </motion.div>
+            </motion.div>
+          </div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

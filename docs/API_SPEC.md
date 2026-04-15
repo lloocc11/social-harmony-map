@@ -1,7 +1,11 @@
 # API Spec - Mindmap Node Data
 
 ## Scope
-Tai lieu nay dinh nghia contract du lieu cho mindmap de frontend render node, edge, popup/sidebar va content theo trang.
+Tai lieu nay dinh nghia contract du lieu cho mindmap de frontend render node, edge va content theo trang.
+
+Current UI behavior:
+- Detail content dang duoc render theo popup mode cho tat ca node.
+- Popup duoc mount qua portal vao `document.body` va canh giua viewport.
 
 ## Source files
 - `src/data/mindmapTypes.ts`
@@ -31,7 +35,7 @@ interface MindmapNodeData {
 - `level`: cap node (0 root, 1 branch, 2 sub, 3 leaf).
 - `parentId`: id node cha.
 - `detailPages`: danh sach trang noi dung theo thu tu.
-- `interaction.mode`: `sidebar` hoac `popup`.
+- `interaction.mode`: `sidebar` hoac `popup` (giu de tuong thich schema; hien tai UI dang ep popup cho tat ca node).
 - `interaction.startPageId`: trang mac dinh khi mo.
 - `layout`: override bo cuc radial theo node.
 - `children`: danh sach node con.
