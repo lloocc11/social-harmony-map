@@ -1,4 +1,4 @@
-import { memo, type CSSProperties } from 'react';
+import { memo, useMemo, useState, type CSSProperties } from 'react';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import type { NodeCategory } from '@/data/mindmapData';
 
@@ -21,12 +21,51 @@ const categoryVars: Record<NodeCategory, { bg: string; fg: string }> = {
   quanhe:  { bg: 'var(--node-quanhe-bg)',  fg: 'var(--node-quanhe-fg)' },
 };
 
+function getNodePadding(level: number) {
+  if (level === 0) return 16;
+  if (level >= 2) return 8;
+  return 12;
+}
+
+function getFontSize(level: number) {
+  if (level === 0) return 14;
+  if (level === 1) return 12;
+  if (level === 2) return 10;
+  return 9;
+}
+
+function getFontWeight(level: number) {
+  if (level === 0) return 700;
+  if (level === 1) return 600;
+  return 500;
+}
+
+function getShadow(bg: string, level: number, hovered: boolean) {
+  const isRoot = level === 0;
+  const isLeaf = level >= 2;
+
+  if (isRoot) {
+    return hovered
+      ? `0 18px 48px hsl(${bg} / 0.58), 0 0 0 8px hsl(${bg} / 0.28)`
+      : `0 12px 38px hsl(${bg} / 0.46), 0 0 0 5px hsl(${bg} / 0.2)`;
+  }
+
+  if (isLeaf) {
+    return hovered ? '0 10px 26px rgba(0, 0, 0, 0.2)' : '0 4px 14px rgba(0, 0, 0, 0.12)';
+  }
+
+  return hovered
+    ? `0 14px 34px hsl(${bg} / 0.45)`
+    : `0 8px 22px hsl(${bg} / 0.34)`;
+}
+
 const RadialNode = memo(({ data }: NodeProps) => {
   const d = data as unknown as RadialNodeData;
   const vars = categoryVars[d.category];
-  const isRoot = d.level === 0;
   const isLeaf = d.level >= 2;
   const size = d.size;
+  const [isHovered, setIsHovered] = useState(false);
+  const nodeShadow = useMemo(() => getShadow(vars.bg, d.level, isHovered), [d.level, isHovered, vars.bg]);
 
   const circleStyle: CSSProperties = {
     width: size,
@@ -35,30 +74,56 @@ const RadialNode = memo(({ data }: NodeProps) => {
     backgroundColor: isLeaf ? 'hsl(var(--node-leaf-bg))' : `hsl(${vars.bg})`,
     color: isLeaf ? 'hsl(var(--node-leaf-fg))' : `hsl(${vars.fg})`,
     border: isLeaf ? '2px solid hsl(var(--node-leaf-border))' : '3px solid rgba(255,255,255,0.15)',
-    boxShadow: isRoot
-      ? `0 8px 32px hsl(${vars.bg} / 0.4), 0 0 0 4px hsl(${vars.bg} / 0.15)`
-      : isLeaf
-        ? '0 2px 8px rgba(0,0,0,0.08)'
-        : `0 4px 16px hsl(${vars.bg} / 0.3)`,
+    boxShadow: nodeShadow,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
-    padding: isRoot ? 16 : isLeaf ? 8 : 12,
+    transform: isHovered ? 'scale(1.06)' : 'scale(1)',
+    transition: 'transform 0.22s ease, box-shadow 0.22s ease',
+    padding: getNodePadding(d.level),
   };
 
-  const fontSize = isRoot ? 13 : d.level === 1 ? 11 : d.level === 2 ? 10 : 9;
-  const fontWeight = isRoot ? 700 : d.level === 1 ? 600 : 500;
+  const fontSize = getFontSize(d.level);
+  const fontWeight = getFontWeight(d.level);
 
   return (
-    <div
+    <button
+      type="button"
       style={circleStyle}
-      className="hover:scale-110 hover:z-10 group"
+      className="group"
+      aria-label={d.label.replaceAll('\n', ' ')}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       onClick={d.onClick}
     >
-      <Handle type="target" position={Position.Top} className="!bg-transparent !border-0 !w-0 !h-0" />
-      <Handle type="source" position={Position.Bottom} className="!bg-transparent !border-0 !w-0 !h-0" />
+      {/* Keep handles at node center so edges are rendered center-to-center. */}
+      <Handle
+        type="target"
+        position={Position.Top}
+        style={{
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+          opacity: 0,
+          width: 1,
+          height: 1,
+          pointerEvents: 'none',
+        }}
+      />
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        style={{
+          left: '50%',
+          top: '50%',
+          transform: 'translate(-50%, -50%)',
+          opacity: 0,
+          width: 1,
+          height: 1,
+          pointerEvents: 'none',
+        }}
+      />
 
       <div className="flex flex-col items-center gap-0.5">
         <span
@@ -77,7 +142,7 @@ const RadialNode = memo(({ data }: NodeProps) => {
           </button>
         )}
       </div>
-    </div>
+    </button>
   );
 });
 

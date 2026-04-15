@@ -12,42 +12,62 @@ import {
   BackgroundVariant,
 } from '@xyflow/react';
 import RadialNode from './RadialNode';
+import MindmapEdge from './MindmapEdge';
 import DetailSidebar from './DetailSidebar';
 import { nodeDataMap, allNodeIds, type MindmapNodeData } from '@/data/mindmapData';
 
 const nodeTypes = { radial: RadialNode };
+const edgeTypes = { mindmap: MindmapEdge };
 
 // Sizes per level
-const SIZES = [160, 110, 80, 65];
+const SIZES = [190, 132, 96, 76];
 
-// Radial distances per level
-const RADII = [0, 260, 200, 150];
+// Radial distances used by the sector-based radial layout.
+const L1_RADIUS = 360;
+const L2_RADIUS = 620;
+const L3_OFFSET = 195;
+
+const categoryColorMap: Record<string, string> = {
+  root: 'hsl(var(--node-root-bg))',
+  intro: 'hsl(var(--node-intro-bg))',
+  dantoc: 'hsl(var(--node-dantoc-bg))',
+  tongiao: 'hsl(var(--node-tongiao-bg))',
+  quanhe: 'hsl(var(--node-quanhe-bg))',
+};
+
+function distributedAngles(count: number, centerAngle: number, spreadAngle: number) {
+  if (count <= 0) return [];
+  if (count === 1) return [centerAngle];
+
+  const start = centerAngle - spreadAngle / 2;
+  const step = spreadAngle / (count - 1);
+  return Array.from({ length: count }, (_, i) => start + i * step);
+}
 
 function getSize(level: number) {
   return SIZES[Math.min(level, SIZES.length - 1)];
 }
 
 /**
- * Compute radial positions.
- * Root at center (0,0).
- * Level-1 nodes around root at RADII[1].
- * Level-2 nodes around their parent at RADII[2].
- * Level-3 nodes around their parent at RADII[3].
+ * Compute a sector-based radial layout.
+ * Root stays at center (0,0), level-1 nodes are equally spaced by 90 degrees,
+ * level-2 nodes use outer rings inside each sector, and level-3 nodes extend
+ * outward from level-2 to keep each branch readable and separated.
  */
 function buildRadialLayout(collapsed: Set<string>) {
   const nodes: Node[] = [];
   const edges: Edge[] = [];
   const positions = new Map<string, { x: number; y: number }>();
+  const angles = new Map<string, number>();
 
-  // Branch angles for level-1 nodes (4 branches spread around)
-  const branchAngles: Record<string, number> = {
-    intro: -120, // upper-left
-    sec1: -30,   // upper-right
-    sec2: 120,   // lower-right
-    sec3: 210,   // lower-left
-  };
+  // 4 level-1 branches are spaced evenly at 90 degrees.
+  const branchOrder = ['intro', 'sec1', 'sec2', 'sec3'];
+  const branchAngles = branchOrder.reduce<Record<string, number>>((acc, id, idx) => {
+    acc[id] = -135 + idx * 90;
+    return acc;
+  }, {});
 
-  function placeNode(id: string, cx: number, cy: number) {
+  function placeNode(id: string, cx: number, cy: number, angleDeg?: number) {
     const data = nodeDataMap[id];
     if (!data) return;
     const size = getSize(data.level);
@@ -55,6 +75,9 @@ function buildRadialLayout(collapsed: Set<string>) {
     const x = cx - size / 2;
     const y = cy - size / 2;
     positions.set(id, { x: cx, y: cy });
+    if (typeof angleDeg === 'number') {
+      angles.set(id, angleDeg);
+    }
 
     nodes.push({
       id,
@@ -72,79 +95,68 @@ function buildRadialLayout(collapsed: Set<string>) {
   }
 
   function addEdge(parentId: string, childId: string) {
-    const parentCat = nodeDataMap[parentId]?.category || 'root';
-    const childCat = nodeDataMap[childId]?.category || parentCat;
-    const cat = childCat;
-    const varMap: Record<string, string> = {
-      root: 'var(--node-root-bg)',
-      intro: 'var(--node-intro-bg)',
-      dantoc: 'var(--node-dantoc-bg)',
-      tongiao: 'var(--node-tongiao-bg)',
-      quanhe: 'var(--node-quanhe-bg)',
-    };
+    const parentCat = nodeDataMap[parentId]?.category ?? 'root';
+    const childCat = nodeDataMap[childId]?.category ?? parentCat;
     edges.push({
       id: `${parentId}-${childId}`,
       source: parentId,
       target: childId,
-      type: 'default',
-      style: {
-        stroke: `hsl(${varMap[cat] || varMap.root})`,
-        strokeWidth: 2.5,
-        opacity: 0.5,
+      type: 'mindmap',
+      data: {
+        startColor: categoryColorMap[parentCat] ?? categoryColorMap.root,
+        endColor: categoryColorMap[childCat] ?? categoryColorMap.root,
       },
     });
   }
 
   // Place root
-  placeNode('root', 0, 0);
+  placeNode('root', 0, 0, 0);
 
   // Place level-1 branches
   const rootChildren = nodeDataMap.root.children || [];
   for (const childId of rootChildren) {
     const angleDeg = branchAngles[childId] ?? 0;
     const angleRad = (angleDeg * Math.PI) / 180;
-    const r = RADII[1];
-    const cx = Math.cos(angleRad) * r;
-    const cy = Math.sin(angleRad) * r;
-    placeNode(childId, cx, cy);
+    const cx = Math.cos(angleRad) * L1_RADIUS;
+    const cy = Math.sin(angleRad) * L1_RADIUS;
+    placeNode(childId, cx, cy, angleDeg);
     addEdge('root', childId);
 
     if (collapsed.has(childId)) continue;
 
-    // Place level-2 children
+    // Keep each branch within its own angular sector to avoid inter-branch overlap.
     const l2Children = nodeDataMap[childId]?.children || [];
-    const l2Count = l2Children.length;
-    const spreadAngle = l2Count <= 2 ? 50 : 40;
-    const startAngle = angleDeg - ((l2Count - 1) * spreadAngle) / 2;
+    const l2Angles = distributedAngles(l2Children.length, angleDeg, 62);
 
-    for (let i = 0; i < l2Count; i++) {
+    for (let i = 0; i < l2Children.length; i++) {
       const l2Id = l2Children[i];
-      const a2Deg = startAngle + i * spreadAngle;
+      const a2Deg = l2Angles[i] ?? angleDeg;
       const a2Rad = (a2Deg * Math.PI) / 180;
-      const r2 = RADII[2];
-      const parentPos = positions.get(childId)!;
-      const cx2 = parentPos.x + Math.cos(a2Rad) * r2;
-      const cy2 = parentPos.y + Math.sin(a2Rad) * r2;
-      placeNode(l2Id, cx2, cy2);
+
+      // Place level-2 nodes on an outer ring for more breathing room.
+      const cx2 = Math.cos(a2Rad) * L2_RADIUS;
+      const cy2 = Math.sin(a2Rad) * L2_RADIUS;
+      placeNode(l2Id, cx2, cy2, a2Deg);
       addEdge(childId, l2Id);
 
       if (collapsed.has(l2Id)) continue;
 
       // Place level-3 children
       const l3Children = nodeDataMap[l2Id]?.children || [];
-      const l3Count = l3Children.length;
-      const spreadAngle3 = l3Count <= 2 ? 45 : 35;
-      const startAngle3 = a2Deg - ((l3Count - 1) * spreadAngle3) / 2;
+      const baseL3Angle = angles.get(l2Id) ?? a2Deg;
+      const l3Angles = distributedAngles(l3Children.length, baseL3Angle, 34);
 
-      for (let j = 0; j < l3Count; j++) {
+      for (let j = 0; j < l3Children.length; j++) {
         const l3Id = l3Children[j];
-        const a3Deg = startAngle3 + j * spreadAngle3;
+        const a3Deg = l3Angles[j] ?? baseL3Angle;
         const a3Rad = (a3Deg * Math.PI) / 180;
-        const r3 = RADII[3];
-        const p2 = positions.get(l2Id)!;
-        const cx3 = p2.x + Math.cos(a3Rad) * r3;
-        const cy3 = p2.y + Math.sin(a3Rad) * r3;
-        placeNode(l3Id, cx3, cy3);
+        const p2 = positions.get(l2Id);
+        if (!p2) continue;
+
+        // Push level-3 nodes outward from their level-2 parent.
+        const cx3 = p2.x + Math.cos(a3Rad) * L3_OFFSET;
+        const cy3 = p2.y + Math.sin(a3Rad) * L3_OFFSET;
+        placeNode(l3Id, cx3, cy3, a3Deg);
         addEdge(l2Id, l3Id);
       }
     }
@@ -160,28 +172,34 @@ function MindmapInner() {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { fitView } = useReactFlow();
 
+  const toggleNodeCollapse = useCallback((id: string) => {
+    setCollapsed((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  }, []);
+
+  const openNodeDetails = useCallback((id: string) => {
+    if (id !== 'root') {
+      setSelectedNode(nodeDataMap[id] || null);
+    }
+  }, []);
+
   useEffect(() => {
     const { nodes: layoutNodes, edges: layoutEdges } = buildRadialLayout(collapsed);
     const withHandlers = layoutNodes.map((n) => ({
       ...n,
       data: {
         ...n.data,
-        onToggle: () => {
-          setCollapsed((prev) => {
-            const next = new Set(prev);
-            next.has(n.id) ? next.delete(n.id) : next.add(n.id);
-            return next;
-          });
-        },
-        onClick: () => {
-          if (n.id !== 'root') setSelectedNode(nodeDataMap[n.id] || null);
-        },
+        onToggle: () => toggleNodeCollapse(n.id),
+        onClick: () => openNodeDetails(n.id),
       },
     }));
     setNodes(withHandlers);
     setEdges(layoutEdges);
     setTimeout(() => fitView({ padding: 0.15, duration: 400 }), 50);
-  }, [collapsed, setNodes, setEdges, fitView]);
+  }, [collapsed, setNodes, setEdges, fitView, toggleNodeCollapse, openNodeDetails]);
 
   const expandAll = useCallback(() => setCollapsed(new Set()), []);
   const collapseAll = useCallback(() => {
@@ -201,12 +219,13 @@ function MindmapInner() {
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         fitView
-        fitViewOptions={{ padding: 0.15 }}
+        fitViewOptions={{ padding: 0.2 }}
         minZoom={0.15}
         maxZoom={2.5}
         proOptions={{ hideAttribution: true }}
-        defaultEdgeOptions={{ type: 'default' }}
+        defaultEdgeOptions={{ type: 'mindmap' }}
       >
         <Background variant={BackgroundVariant.Dots} gap={30} size={1} className="!bg-background" />
         <Controls
