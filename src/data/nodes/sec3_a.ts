@@ -13,38 +13,49 @@ export const sec3_aNode: MindmapNodeData = {
       blocks: [
         {
           type: 'text',
-          text: 'Quan hệ dân tộc - tôn giáo ở Việt Nam có tính lịch sử lâu dài, gắn với cộng đồng cư dân cụ thể và đời sống văn hóa bản địa.',
+          text: 'Quan hệ dân tộc và tôn giáo ở Việt Nam có 3 đặc điểm đặc thù cơ bản, phản ánh lịch sử hình thành quốc gia, nền tảng tín ngưỡng truyền thống và tác động của bối cảnh hội nhập hiện nay.',
         },
       ],
     },
     {
-      id: 'sec3-a-points',
-      title: 'Đặc điểm tiêu biểu',
-      blocks: [
-        {
-          type: 'list',
-          items: [
-            'Đa dân tộc, đa tôn giáo.',
-            'Quan hệ gắn bó chặt chẽ trong lịch sử.',
-            'Tín ngưỡng đan xen với văn hóa dân tộc.',
-          ],
-        },
-      ],
-    },
-    {
-      id: 'sec3-a-full-legacy',
-      title: 'Nội dung đầy đủ (legacy)',
+      id: 'sec3-a-feature-1',
+      title: 'Đặc điểm thứ nhất',
       blocks: [
         {
           type: 'text',
-          text: `Quan hệ dân tộc và tôn giáo là sự liên kết, tác động qua lại và chi phối lẫn nhau giữa dân tộc với tôn giáo trong nội bộ một quốc gia hoặc giữa các quốc gia trên mọi lĩnh vực của đời sống xã hội.
-
-Ở Việt Nam hiện nay, quan hệ dân tộc và tôn giáo có những đặc điểm cơ bản:
-1) Được thiết lập và củng cố trên cơ sở cộng đồng quốc gia - dân tộc thống nhất.
-2) Chịu sự chi phối mạnh mẽ của tín ngưỡng truyền thống.
-3) Có sự xuất hiện và phát triển của các hiện tượng tôn giáo mới trong bối cảnh hội nhập.
-
-Việc quản lý tốt mối quan hệ này có ý nghĩa trực tiếp đối với ổn định chính trị, trật tự xã hội và khối đại đoàn kết toàn dân tộc.`,
+          text: 'Việt Nam là quốc gia đa dân tộc, đa tôn giáo; quan hệ dân tộc và tôn giáo được thiết lập, củng cố trên cơ sở cộng đồng quốc gia - dân tộc thống nhất. Các tôn giáo ở Việt Nam có truyền thống gắn bó, đồng hành cùng dân tộc, gắn đạo với đời.',
+        },
+        {
+          type: 'text',
+          text: 'Mọi công dân không phân biệt dân tộc, tín ngưỡng đều có ý thức về cội nguồn và trách nhiệm bảo vệ Tổ quốc. Dưới sự lãnh đạo của Đảng, quan hệ dân tộc - tôn giáo nhìn chung được giải quyết tốt, không dẫn đến xung đột lớn trong nội bộ quốc gia.',
+        },
+      ],
+    },
+    {
+      id: 'sec3-a-feature-2',
+      title: 'Đặc điểm thứ hai',
+      blocks: [
+        {
+          type: 'text',
+          text: 'Quan hệ dân tộc và tôn giáo ở Việt Nam chịu sự chi phối mạnh mẽ bởi tín ngưỡng truyền thống. Tín ngưỡng thờ cúng tổ tiên, anh hùng dân tộc diễn ra ở nhiều cấp độ: gia đình, dòng họ, làng xã đến phạm vi quốc gia.',
+        },
+        {
+          type: 'text',
+          text: 'Nền tảng tín ngưỡng này là sợi dây gắn kết cộng đồng, tạo nên nét đặc thù văn hóa Việt Nam, đồng thời chi phối và làm biến đổi các tôn giáo ngoại nhập để phù hợp với bản sắc văn hóa bản địa.',
+        },
+      ],
+    },
+    {
+      id: 'sec3-a-feature-3',
+      title: 'Đặc điểm thứ ba',
+      blocks: [
+        {
+          type: 'text',
+          text: 'Các hiện tượng tôn giáo mới có xu hướng phát triển mạnh, tác động đến đời sống cộng đồng và khối đại đoàn kết toàn dân tộc. Quá trình hội nhập làm xuất hiện một số hiện tượng tôn giáo mới và tổ chức đội lốt tôn giáo mang màu sắc mê tín.',
+        },
+        {
+          type: 'text',
+          text: 'Một số nhóm lợi dụng truyền đạo trái phép, phát tán tài liệu xuyên tạc, kích động chia rẽ dân tộc - tôn giáo, làm phức tạp tình hình an ninh chính trị, trật tự an toàn xã hội.',
         },
       ],
     },

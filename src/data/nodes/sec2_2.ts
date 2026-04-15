@@ -6,14 +6,15 @@ export const sec2_2Node: MindmapNodeData = {
   category: 'tongiao',
   level: 2,
   parentId: 'sec2',
+  interaction: { mode: 'popup' },
   detailPages: [
     {
       id: 'sec2-2-main',
-      title: 'Tôn giáo Việt Nam và chính sách',
+      title: '2.2 Tôn giáo ở Việt Nam và chính sách hiện nay',
       blocks: [
         {
           type: 'text',
-          text: 'Thực tiễn tôn giáo Việt Nam thể hiện sự đa dạng, đồng thời đặt ra yêu cầu bảo đảm quyền tự do tín ngưỡng đi đôi với ổn định xã hội.',
+          text: 'Nội dung phần 2.2 được chia thành hai nội dung chính: (1) Đặc điểm tôn giáo ở Việt Nam; (2) Chính sách của Đảng, Nhà nước Việt Nam đối với tín ngưỡng, tôn giáo hiện nay.',
         },
       ],
     },
@@ -24,10 +25,19 @@ export const sec2_2Node: MindmapNodeData = {
         {
           type: 'list',
           items: [
-            'Việt Nam đa tôn giáo, hơn 26 triệu tín đồ.',
-            'Phật giáo, Công giáo, Tin Lành, Cao Đài, Hòa Hảo, Hồi giáo.',
-            'Chính sách: tôn trọng, bình đẳng, đoàn kết.',
+            '2.2.1 Đặc điểm tôn giáo ở Việt Nam: 6 đặc điểm nổi bật.',
+            '2.2.2 Chính sách tôn giáo của Đảng, Nhà nước: 5 nội dung cơ bản.',
           ],
+        },
+      ],
+    },
+    {
+      id: 'sec2-2-link-note',
+      title: 'Liên kết node con',
+      blocks: [
+        {
+          type: 'text',
+          text: 'Nội dung chi tiết được triển khai ở hai node con: "Đặc điểm tôn giáo ở Việt Nam" và "Chính sách của Đảng, Nhà nước Việt Nam đối với tín ngưỡng, tôn giáo hiện nay".',
         },
       ],
     },

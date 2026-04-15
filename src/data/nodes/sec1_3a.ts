@@ -13,54 +13,56 @@ export const sec1_3aNode: MindmapNodeData = {
       blocks: [
         {
           type: 'text',
-          text: 'Bức tranh dân tộc Việt Nam vừa đa dạng vừa thống nhất, tạo nền tảng cho khối đại đoàn kết toàn dân tộc.',
+          text: 'Việt Nam là một quốc gia đa tộc người với 54 dân tộc anh em. Bức tranh dân tộc Việt Nam có 6 đặc điểm nổi bật, vừa thể hiện tính đa dạng, vừa tạo nền tảng cho khối đại đoàn kết toàn dân tộc.',
         },
       ],
     },
     {
-      id: 'sec1-3a-points',
-      title: 'Các điểm chính',
+      id: 'sec1-3a-feature-1-2',
+      title: 'Đặc điểm 1-2',
       blocks: [
         {
           type: 'list',
           items: [
-            '54 dân tộc, Kinh chiếm ~86%.',
-            'Truyền thống đoàn kết lâu đời.',
-            'Dân tộc thiểu số ở miền núi, vùng sâu.',
-            'Phát triển không đồng đều.',
+            'Thứ nhất: Có sự chênh lệch về số dân giữa các tộc người. Dân tộc Kinh chiếm 85,7% dân số, trong khi 53 dân tộc thiểu số chiếm 14,3%. Quy mô dân số giữa các dân tộc thiểu số cũng không đồng đều, có dân tộc trên 1 triệu người nhưng có dân tộc chỉ vài ba trăm người, đòi hỏi chính sách quan tâm đặc biệt để bảo tồn và phát triển.',
+            'Thứ hai: Các dân tộc cư trú xen kẽ nhau. Việt Nam là nơi chuyển cư của nhiều dân tộc, tạo nên bản đồ cư trú phân tán, không có dân tộc nào cư trú tập trung duy nhất trên một địa bàn. Điều này vừa thuận lợi cho giao lưu, phát triển văn hóa thống nhất trong đa dạng, vừa có thể nảy sinh mâu thuẫn và bị lợi dụng để chia rẽ.',
           ],
         },
       ],
     },
     {
-      id: 'sec1-3a-full-legacy',
-      title: 'Nội dung đầy đủ (legacy)',
+      id: 'sec1-3a-feature-3-4',
+      title: 'Đặc điểm 3-4',
+      blocks: [
+        {
+          type: 'list',
+          items: [
+            'Thứ ba: Phân bố chủ yếu ở địa bàn có vị trí chiến lược quan trọng. 53 dân tộc thiểu số cư trú trên 3/4 diện tích lãnh thổ, tập trung ở các vùng trọng yếu về kinh tế, an ninh, quốc phòng như biên giới, hải đảo, vùng sâu, vùng xa. Nhiều dân tộc có quan hệ dòng tộc với các nước láng giềng.',
+            'Thứ tư: Trình độ phát triển không đều. Có sự chênh lệch khá lớn về trình độ phát triển kinh tế, văn hóa, xã hội giữa các dân tộc. Mặc dù đại bộ phận đã chuyển sang phương thức sản xuất tiến bộ, một số ít vẫn duy trì kinh tế chiếm đoạt. Thu hẹp khoảng cách phát triển là nội dung quan trọng trong đường lối, chính sách của Nhà nước.',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'sec1-3a-feature-5-6',
+      title: 'Đặc điểm 5-6',
+      blocks: [
+        {
+          type: 'list',
+          items: [
+            'Thứ năm: Có truyền thống đoàn kết gắn bó lâu đời. Đặc trưng này hình thành từ yêu cầu hợp sức để cải biến tự nhiên và chống ngoại xâm, tạo ra độ kết dính cao giữa các dân tộc. Đây là sức mạnh, động lực quyết định mọi thắng lợi trong lịch sử và trong sự nghiệp xây dựng, bảo vệ Tổ quốc ngày nay.',
+            'Thứ sáu: Mỗi dân tộc có bản sắc văn hóa riêng. Sự đa dạng văn hóa của từng dân tộc góp phần tạo nên nền văn hóa Việt Nam thống nhất trong đa dạng, dựa trên nền tảng chung là lịch sử dựng nước, giữ nước và ý thức quốc gia độc lập.',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'sec1-3a-conclusion',
+      title: 'Ý nghĩa đối với chính sách dân tộc',
       blocks: [
         {
           type: 'text',
-          text: `Đặc điểm dân tộc Việt Nam
-Việt Nam là một quốc gia đa dân tộc với 54 dân tộc anh em, có những đặc điểm nổi bật sau:
-Thứ nhất: Sự chênh lệch về số dân giữa các tộc người
-Việt Nam có 54 dân tộc, trong đó dân tộc Kinh chiếm 85,7% dân số (hơn 73,5 triệu người), 53 dân tộc thiểu số chiếm 14,3% (hơn 12,2 triệu người).
-Tỷ lệ dân số giữa các dân tộc rất không đồng đều: có dân tộc trên 1 triệu người, nhưng cũng có dân tộc chỉ vài trăm người. Việc phát triển số dân hợp lý cho các dân tộc rất ít người là nội dung được Đảng và Nhà nước quan tâm đặc biệt.
-Thứ hai: Các dân tộc cư trú xen kẽ nhau
-Các dân tộc ở Việt Nam không có lãnh thổ tộc người riêng mà cư trú phân tán, xen kẽ lẫn nhau.
--> Tạo điều kiện thuận lợi cho giao lưu, hiểu biết và xây dựng nền văn hóa thống nhất trong đa dạng.
--> Đồng thời cũng dễ phát sinh mâu thuẫn, xung đột, bị các thế lực thù địch lợi dụng để phá hoại khối đại đoàn kết dân tộc.
-Thứ ba: Phân bố chủ yếu ở địa bàn chiến lược quan trọng
-53 dân tộc thiểu số chỉ chiếm 14,3% dân số nhưng lại cư trú trên 3/4 diện tích lãnh thổ, chủ yếu ở vùng biên giới, hải đảo, vùng sâu, vùng xa.
-Đây là những khu vực có vị trí quan trọng về kinh tế, an ninh, quốc phòng và môi trường sinh thái. Do đó, vấn đề dân tộc luôn gắn liền với an ninh quốc gia.
-Thứ tư: Trình độ phát triển không đều
-Giữa các dân tộc còn tồn tại sự chênh lệch khá lớn về trình độ phát triển kinh tế, văn hóa, xã hội. Nhiều dân tộc thiểu số vẫn còn trình độ dân trí và chuyên môn thấp.
-Việc giảm dần và tiến tới xóa bỏ khoảng cách phát triển giữa các dân tộc là nhiệm vụ quan trọng để thực hiện bình đẳng dân tộc.
-Thứ năm: Truyền thống đoàn kết gắn bó lâu đời
-Đoàn kết dân tộc là truyền thống quý báu, được hình thành từ rất sớm trong lịch sử dựng nước và giữ nước.
-Đây là nguồn sức mạnh quan trọng giúp dân tộc Việt Nam vượt qua mọi kẻ thù xâm lược. Ngày nay, cần tiếp tục phát huy truyền thống này, nâng cao cảnh giác, đấu tranh chống mọi âm mưu chia rẽ dân tộc.
-Thứ sáu: Mỗi dân tộc có bản sắc văn hóa riêng
-Mỗi dân tộc đều có sắc thái văn hóa độc đáo, góp phần tạo nên nền văn hóa Việt Nam thống nhất trong đa dạng.
-Sự thống nhất này xuất phát từ mục tiêu chung: dựng nước và giữ nước, ý thức về một quốc gia độc lập, thống nhất.
-Kết luận:
-Những đặc điểm trên là cơ sở quan trọng để Đảng và Nhà nước ta xây dựng và thực hiện chính sách dân tộc đúng đắn, góp phần củng cố khối đại đoàn kết toàn dân tộc trong thời kỳ quá độ lên chủ nghĩa xã hội.`,
+          text: 'Sáu đặc điểm trên là cơ sở thực tiễn quan trọng để xây dựng và thực hiện chính sách dân tộc đúng đắn, qua đó củng cố khối đại đoàn kết toàn dân tộc trong thời kỳ quá độ lên chủ nghĩa xã hội.',
         },
       ],
     },

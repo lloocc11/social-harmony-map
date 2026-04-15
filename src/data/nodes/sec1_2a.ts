@@ -13,7 +13,7 @@ export const sec1_2aNode: MindmapNodeData = {
       blocks: [
         {
           type: 'text',
-          text: 'Trong tiến trình lịch sử, vấn đề dân tộc thường vận động theo hai xu hướng song song và có thể đan xen.',
+          text: 'Khi nghiên cứu về vấn đề dân tộc, V.I. Lênin đã chỉ ra hai xu hướng khách quan trong sự phát triển quan hệ dân tộc. Hai xu hướng này tồn tại song song và có tác động qua lại lẫn nhau.',
         },
       ],
     },
@@ -23,7 +23,11 @@ export const sec1_2aNode: MindmapNodeData = {
       blocks: [
         {
           type: 'text',
-          text: 'Các cộng đồng dân cư muốn tách ra để hình thành cộng đồng dân tộc độc lập.',
+          text: 'Cộng đồng dân cư muốn tách ra để hình thành cộng đồng dân tộc độc lập. Nguyên nhân là do sự thức tỉnh và trưởng thành về ý thức dân tộc, ý thức về quyền sống của mình.',
+        },
+        {
+          type: 'text',
+          text: 'Xu hướng này thể hiện rõ qua phong trào đấu tranh giành độc lập của các dân tộc thuộc địa và phụ thuộc nhằm thoát khỏi sự áp bức, bóc lột của đế quốc, thực dân.',
         },
       ],
     },
@@ -33,33 +37,21 @@ export const sec1_2aNode: MindmapNodeData = {
       blocks: [
         {
           type: 'text',
-          text: 'Các dân tộc muốn liên hiệp lại với nhau trên cơ sở lợi ích phát triển chung.',
+          text: 'Các dân tộc trong một quốc gia, thậm chí ở nhiều quốc gia, muốn liên hiệp lại với nhau. Sự phát triển mạnh mẽ của lực lượng sản xuất, khoa học công nghệ và sự giao lưu kinh tế, văn hóa trong xã hội tư bản đã làm nảy sinh nhu cầu xóa bỏ các hàng rào ngăn cách, thúc đẩy các dân tộc xích lại gần nhau.',
         },
       ],
     },
     {
-      id: 'sec1-2a-full-legacy',
-      title: 'Nội dung đầy đủ (legacy)',
+      id: 'sec1-2a-dialectic-relation',
+      title: 'Quan hệ giữa hai xu hướng trong thời đại ngày nay',
       blocks: [
         {
           type: 'text',
-          text: `Xu hướng thứ nhất:
-Các cộng đồng dân tộc muốn tách ra để hình thành dân tộc độc lập.
--> Thể hiện qua ý thức dân tộc thức tỉnh, đòi tự do, bình đẳng và phồn vinh dân tộc.
--> Biểu hiện rõ nét trong phong trào giải phóng dân tộc chống thực dân, đế quốc.
-
-Xu hướng thứ hai:
-Các dân tộc muốn xích lại gần nhau, liên hiệp và hợp tác.
--> Do sự phát triển của lực lượng sản xuất, khoa học - công nghệ và giao lưu kinh tế - văn hóa.
--> Thể hiện trong xu thế toàn cầu hóa, hợp tác khu vực và quốc tế.
-
-Trong thời đại ngày nay:
-
-Xu hướng 1: Đòi độc lập, tự do, bình đẳng dân tộc.
-Xu hướng 2: Hợp tác, liên minh giữa các dân tộc trên mọi lĩnh vực.
-
-Mối quan hệ giữa hai xu hướng:
-Hai xu hướng có quan hệ biện chứng, tác động qua lại lẫn nhau. Việc vi phạm một xu hướng sẽ dẫn đến mâu thuẫn gay gắt với xu hướng kia. Hiện nay, cả hai xu hướng đều bị các thế lực thù địch lợi dụng để thực hiện chiến lược "diễn biến hòa bình".`,
+          text: 'Trong thời đại ngày nay, hai xu hướng này luôn có sự tác động qua lại, hỗ trợ lẫn nhau trong tiến trình phát triển của mỗi quốc gia và toàn nhân loại.',
+        },
+        {
+          type: 'text',
+          text: 'Việc vi phạm mối quan hệ biện chứng giữa hai xu hướng có thể dẫn tới hậu quả tiêu cực, đặc biệt khi bị các thế lực thù địch lợi dụng để thực hiện "diễn biến hòa bình".',
         },
       ],
     },
