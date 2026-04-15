@@ -15,6 +15,8 @@ import RadialNode from './RadialNode';
 import MindmapEdge from './MindmapEdge';
 import DetailSidebar from './DetailSidebar';
 import { nodeDataMap, allNodeIds, type MindmapNodeData } from '@/data/mindmapData';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const nodeTypes = { radial: RadialNode };
 const edgeTypes = { mindmap: MindmapEdge };
@@ -168,6 +170,7 @@ function buildRadialLayout(collapsed: Set<string>) {
 function MindmapInner() {
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const [selectedNode, setSelectedNode] = useState<MindmapNodeData | null>(null);
+  const [popupNode, setPopupNode] = useState<MindmapNodeData | null>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { fitView } = useReactFlow();
@@ -182,6 +185,23 @@ function MindmapInner() {
 
   const openNodeDetails = useCallback((id: string) => {
     if (id !== 'root') {
+      if (
+        id === 'sec1_1' ||
+        id === 'sec1_2a' ||
+        id === 'sec1_2b' ||
+        id === 'sec1_3a' ||
+        id === 'sec1_3b' ||
+        id === 'sec2_1a' ||
+        id === 'sec2_1b' ||
+        id === 'sec2_2a' ||
+        id === 'sec2_2b' ||
+        id === 'sec3_a' ||
+        id === 'sec3_b'
+      ) {
+        setPopupNode(nodeDataMap[id] || null);
+        setSelectedNode(null);
+        return;
+      }
       setSelectedNode(nodeDataMap[id] || null);
     }
   }, []);
@@ -247,6 +267,23 @@ function MindmapInner() {
       </div>
 
       <DetailSidebar node={selectedNode} onClose={() => setSelectedNode(null)} />
+
+      <Dialog open={!!popupNode} onOpenChange={(open) => (!open ? setPopupNode(null) : undefined)}>
+        <DialogContent className="max-w-3xl p-0">
+          {popupNode && (
+            <>
+              <DialogHeader className="px-6 pt-6 pb-3">
+                <DialogTitle className="whitespace-pre-line">{popupNode.label}</DialogTitle>
+              </DialogHeader>
+              <ScrollArea className="max-h-[70vh] px-6 pb-6">
+                <div className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line">
+                  {popupNode.detail}
+                </div>
+              </ScrollArea>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
