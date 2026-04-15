@@ -18,6 +18,26 @@ export const sec1_2Node: MindmapNodeData = {
         },
       ],
     },
+    {
+      id: 'sec1-2-structure',
+      title: 'Cấu trúc nội dung',
+      blocks: [
+        {
+          type: 'list',
+          items: ['Hai xu hướng khách quan của dân tộc', 'Cương lĩnh dân tộc của chủ nghĩa Mác-Lênin'],
+        },
+      ],
+    },
+    {
+      id: 'sec1-2-note',
+      title: 'Lien ket node con',
+      blocks: [
+        {
+          type: 'text',
+          text: 'Chi tiet tung noi dung duoc trinh bay o hai node con: Hai xu huong khach quan va Cuong linh dan toc.',
+        },
+      ],
+    },
   ],
   layout: {
     childSpread: 34,

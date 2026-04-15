@@ -5,3 +5,4 @@ TODO: Document your project here
 ## Developer docs
 
 - Page structure and node data guide: `docs/DEV_PAGE_STRUCTURE_GUIDE.md`
+- API spec for node data contract: `docs/API_SPEC.md`
