@@ -126,17 +126,20 @@ interface NodeInteractionConfig {
 ## Realtime Q&A note
 - Da bo sung component `RealtimeQA` voi che do hoi-dap realtime, khong can auth.
 - Tab moi `Q&A` duoc them vao trang chinh de nguoi dung dat cau hoi va tra loi truc tiep.
+- Hien tai luong thao tac la CRU (Create/Read/Update), khong co Delete.
 
 ### Firebase collections
 - `qa_questions`
   - `author: string`
   - `text: string`
   - `createdAt: serverTimestamp`
+  - `updatedAt: serverTimestamp | null`
 - `qa_answers`
   - `questionId: string`
   - `author: string`
   - `text: string`
   - `createdAt: serverTimestamp`
+  - `updatedAt: serverTimestamp | null`
 
 ### Firebase env keys
 - `VITE_FIREBASE_API_KEY`

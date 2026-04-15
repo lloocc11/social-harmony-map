@@ -2,14 +2,16 @@ import { useEffect, useMemo, useState } from 'react';
 import {
   addDoc,
   collection,
+  doc,
   onSnapshot,
   orderBy,
   query,
   serverTimestamp,
+  updateDoc,
   limit,
   type Timestamp,
 } from 'firebase/firestore';
-import { MessageSquarePlus, Send } from 'lucide-react';
+import { Edit3, MessageSquarePlus, Save, Send, X } from 'lucide-react';
 import { db, isFirebaseConfigured, missingFirebaseEnvKeys } from '@/lib/firebase';
 
 interface QAQuestion {
@@ -17,6 +19,7 @@ interface QAQuestion {
   author: string;
   text: string;
   createdAt: Timestamp | null;
+  updatedAt?: Timestamp | null;
 }
 
 interface QAAnswer {
@@ -25,6 +28,7 @@ interface QAAnswer {
   author: string;
   text: string;
   createdAt: Timestamp | null;
+  updatedAt?: Timestamp | null;
 }
 
 function formatDate(ts: Timestamp | null) {
@@ -38,14 +42,23 @@ function formatDate(ts: Timestamp | null) {
 }
 
 export default function RealtimeQA() {
-  const [displayName, setDisplayName] = useState('');
+  const [displayName, setDisplayName] = useState(() => globalThis.localStorage.getItem('qa-display-name') ?? '');
   const [questionText, setQuestionText] = useState('');
   const [answerDraftByQuestion, setAnswerDraftByQuestion] = useState<Record<string, string>>({});
   const [questions, setQuestions] = useState<QAQuestion[]>([]);
   const [answers, setAnswers] = useState<QAAnswer[]>([]);
   const [savingQuestion, setSavingQuestion] = useState(false);
   const [savingAnswerId, setSavingAnswerId] = useState<string | null>(null);
+  const [editingQuestionId, setEditingQuestionId] = useState<string | null>(null);
+  const [editingQuestionText, setEditingQuestionText] = useState('');
+  const [editingAnswerId, setEditingAnswerId] = useState<string | null>(null);
+  const [editingAnswerText, setEditingAnswerText] = useState('');
+  const [savingEditId, setSavingEditId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    globalThis.localStorage.setItem('qa-display-name', displayName);
+  }, [displayName]);
 
   useEffect(() => {
     if (!db || !isFirebaseConfigured) return;
@@ -70,6 +83,7 @@ export default function RealtimeQA() {
           author: data.author || 'Ẩn danh',
           text: data.text || '',
           createdAt: data.createdAt ?? null,
+          updatedAt: data.updatedAt ?? null,
         } satisfies QAQuestion;
       });
       setQuestions(next);
@@ -84,6 +98,7 @@ export default function RealtimeQA() {
           author: data.author || 'Ẩn danh',
           text: data.text || '',
           createdAt: data.createdAt ?? null,
+          updatedAt: data.updatedAt ?? null,
         } satisfies QAAnswer;
       });
       setAnswers(next);
@@ -118,6 +133,7 @@ export default function RealtimeQA() {
         author: displayName.trim() || 'Ẩn danh',
         text,
         createdAt: serverTimestamp(),
+        updatedAt: null,
       });
       setQuestionText('');
     } catch {
@@ -143,6 +159,7 @@ export default function RealtimeQA() {
         author: displayName.trim() || 'Ẩn danh',
         text,
         createdAt: serverTimestamp(),
+        updatedAt: null,
       });
 
       setAnswerDraftByQuestion((prev) => ({
@@ -154,6 +171,74 @@ export default function RealtimeQA() {
     } finally {
       setSavingAnswerId(null);
     }
+  };
+
+  const beginQuestionEdit = (question: QAQuestion) => {
+    setEditingQuestionId(question.id);
+    setEditingQuestionText(question.text);
+  };
+
+  const cancelQuestionEdit = () => {
+    setEditingQuestionId(null);
+    setEditingQuestionText('');
+  };
+
+  const saveQuestionEdit = async (questionId: string) => {
+    if (!db) return;
+    const text = editingQuestionText.trim();
+    if (!text) return;
+
+    setSavingEditId(questionId);
+    setErrorMessage(null);
+
+    try {
+      await updateDoc(doc(db, 'qa_questions', questionId), {
+        text,
+        updatedAt: serverTimestamp(),
+      });
+      cancelQuestionEdit();
+    } catch {
+      setErrorMessage('Không thể cập nhật câu hỏi. Kiểm tra Firebase rules và kết nối mạng.');
+    } finally {
+      setSavingEditId(null);
+    }
+  };
+
+  const beginAnswerEdit = (answer: QAAnswer) => {
+    setEditingAnswerId(answer.id);
+    setEditingAnswerText(answer.text);
+  };
+
+  const cancelAnswerEdit = () => {
+    setEditingAnswerId(null);
+    setEditingAnswerText('');
+  };
+
+  const saveAnswerEdit = async (answerId: string) => {
+    if (!db) return;
+    const text = editingAnswerText.trim();
+    if (!text) return;
+
+    setSavingEditId(answerId);
+    setErrorMessage(null);
+
+    try {
+      await updateDoc(doc(db, 'qa_answers', answerId), {
+        text,
+        updatedAt: serverTimestamp(),
+      });
+      cancelAnswerEdit();
+    } catch {
+      setErrorMessage('Không thể cập nhật câu trả lời. Kiểm tra Firebase rules và kết nối mạng.');
+    } finally {
+      setSavingEditId(null);
+    }
+  };
+
+  const normalizeName = (name: string) => name.trim().toLowerCase();
+  const canEditByName = (author: string) => {
+    if (!displayName.trim()) return false;
+    return normalizeName(author) === normalizeName(displayName);
   };
 
   if (!isFirebaseConfigured || !db) {
@@ -185,7 +270,7 @@ export default function RealtimeQA() {
         </div>
 
         <div className="mt-5 rounded-xl border border-border bg-card p-5">
-          <p className="text-sm text-muted-foreground">Mọi người có thể đặt câu hỏi và trả lời công khai theo thời gian thực.</p>
+          <p className="text-sm text-muted-foreground">Mọi người có thể đặt câu hỏi và trả lời công khai theo thời gian thực (CRU, không xóa).</p>
 
           <div className="mt-4 grid gap-3 md:grid-cols-[220px_1fr_auto]">
             <input
@@ -235,16 +320,61 @@ export default function RealtimeQA() {
             const questionAnswers = answersByQuestion[question.id] ?? [];
             const answerDraft = answerDraftByQuestion[question.id] ?? '';
             const isSavingAnswer = savingAnswerId === question.id;
+            const canEditQuestion = canEditByName(question.author);
+            const isEditingQuestion = editingQuestionId === question.id;
+            const isSavingQuestionEdit = savingEditId === question.id;
 
             return (
               <article key={question.id} className="rounded-xl border border-border bg-card p-5">
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
                   <span className="font-semibold text-foreground">{question.author}</span>
                   <span>{formatDate(question.createdAt)}</span>
+                  {question.updatedAt && <span>đã sửa {formatDate(question.updatedAt)}</span>}
                   <span>{`${questionAnswers.length} trả lời`}</span>
+                  {canEditQuestion && !isEditingQuestion && (
+                    <button
+                      type="button"
+                      onClick={() => beginQuestionEdit(question)}
+                      className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[11px] hover:bg-muted"
+                    >
+                      <Edit3 size={12} />
+                      Sửa
+                    </button>
+                  )}
                 </div>
 
-                <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">{question.text}</p>
+                {!isEditingQuestion && (
+                  <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">{question.text}</p>
+                )}
+
+                {isEditingQuestion && (
+                  <div className="mt-2 space-y-2">
+                    <textarea
+                      value={editingQuestionText}
+                      onChange={(e) => setEditingQuestionText(e.target.value)}
+                      className="min-h-[88px] w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                    />
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => void saveQuestionEdit(question.id)}
+                        disabled={isSavingQuestionEdit || !editingQuestionText.trim()}
+                        className="inline-flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground disabled:opacity-50"
+                      >
+                        <Save size={12} />
+                        Lưu sửa
+                      </button>
+                      <button
+                        type="button"
+                        onClick={cancelQuestionEdit}
+                        className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
+                      >
+                        <X size={12} />
+                        Hủy
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 <div className="mt-4 space-y-2 border-l-2 border-border pl-3">
                   {questionAnswers.length === 0 && (
@@ -252,11 +382,54 @@ export default function RealtimeQA() {
                   )}
                   {questionAnswers.map((answer) => (
                     <div key={answer.id} className="rounded-lg border border-border/80 bg-background/50 px-3 py-2">
-                      <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+                      <div className="flex flex-wrap items-center gap-2 text-[11px] text-muted-foreground">
                         <span className="font-medium text-foreground">{answer.author}</span>
                         <span>{formatDate(answer.createdAt)}</span>
+                        {answer.updatedAt && <span>đã sửa {formatDate(answer.updatedAt)}</span>}
+                        {canEditByName(answer.author) && editingAnswerId !== answer.id && (
+                          <button
+                            type="button"
+                            onClick={() => beginAnswerEdit(answer)}
+                            className="inline-flex items-center gap-1 rounded-md border border-border px-2 py-1 text-[11px] hover:bg-muted"
+                          >
+                            <Edit3 size={12} />
+                            Sửa
+                          </button>
+                        )}
                       </div>
-                      <p className="mt-1 whitespace-pre-wrap text-sm text-foreground/85">{answer.text}</p>
+
+                      {editingAnswerId !== answer.id && (
+                        <p className="mt-1 whitespace-pre-wrap text-sm text-foreground/85">{answer.text}</p>
+                      )}
+
+                      {editingAnswerId === answer.id && (
+                        <div className="mt-2 space-y-2">
+                          <textarea
+                            value={editingAnswerText}
+                            onChange={(e) => setEditingAnswerText(e.target.value)}
+                            className="min-h-[78px] w-full rounded-lg border border-input bg-background px-3 py-2 text-sm"
+                          />
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => void saveAnswerEdit(answer.id)}
+                              disabled={savingEditId === answer.id || !editingAnswerText.trim()}
+                              className="inline-flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground disabled:opacity-50"
+                            >
+                              <Save size={12} />
+                              Lưu sửa
+                            </button>
+                            <button
+                              type="button"
+                              onClick={cancelAnswerEdit}
+                              className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
+                            >
+                              <X size={12} />
+                              Hủy
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
