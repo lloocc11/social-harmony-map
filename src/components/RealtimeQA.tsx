@@ -266,11 +266,11 @@ export default function RealtimeQA() {
       <div className="max-w-5xl mx-auto px-6 py-8">
         <div className="flex items-center gap-3">
           <MessageSquarePlus className="text-primary" size={20} />
-          <h2 className="text-lg font-bold">Q&A Realtime (No Auth)</h2>
+          <h2 className="text-lg font-bold">Q&A Realtime</h2>
         </div>
 
         <div className="mt-5 rounded-xl border border-border bg-card p-5">
-          <p className="text-sm text-muted-foreground">Mọi người có thể đặt câu hỏi và trả lời công khai theo thời gian thực (CRU, không xóa).</p>
+          <p className="text-sm text-muted-foreground">Mọi người có thể đặt câu hỏi và trả lời công khai.</p>
 
           <div className="mt-4 grid gap-3 md:grid-cols-[220px_1fr_auto]">
             <input
