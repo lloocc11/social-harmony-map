@@ -114,3 +114,6 @@ interface NodeInteractionConfig {
 - Phan `sec2_1` duoc to chuc theo mau: node tong quan (`sec2_1`) + 2 node con (`sec2_1a`, `sec2_1b`) cho "ban chat, nguon goc, tinh chat ton giao" va "4 nguyen tac giai quyet van de ton giao".
 - Phan `sec2_2` duoc to chuc: node tong quan (`sec2_2`) + 2 node con (`sec2_2a`, `sec2_2b`) cho "6 dac diem ton giao o Viet Nam" va "5 noi dung chinh sach ton giao cua Dang, Nha nuoc".
 - Phan `sec3` duoc to chuc: node tong quan (`sec3`) + 2 node con (`sec3_a`, `sec3_b`) cho "3 dac diem quan he dan toc - ton giao" va "3 dinh huong giai quyet hien nay".
+
+## Node rendering note
+- Node renderer dang ap dung kich thuoc lon hon theo level va co co che font/adaptive line-height cho nhan dai, giup han che tran chu ra ngoai hinh tron.

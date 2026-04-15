@@ -22,22 +22,49 @@ const categoryVars: Record<NodeCategory, { bg: string; fg: string }> = {
 };
 
 function getNodePadding(level: number) {
-  if (level === 0) return 16;
-  if (level >= 2) return 8;
+  if (level === 0) return 18;
+  if (level >= 2) return 7;
   return 12;
 }
 
 function getFontSize(level: number) {
   if (level === 0) return 14;
   if (level === 1) return 12;
-  if (level === 2) return 10;
-  return 9;
+  if (level === 2) return 11;
+  return 10;
 }
 
 function getFontWeight(level: number) {
   if (level === 0) return 700;
   if (level === 1) return 600;
   return 500;
+}
+
+function getAdaptiveFontSize(label: string, level: number) {
+  const base = getFontSize(level);
+  const compact = label.replace(/\s+/g, ' ').trim();
+  const lineCount = label.split('\n').length;
+  const length = compact.length;
+
+  if (level >= 2) {
+    if (lineCount >= 7 || length > 66) return Math.max(8.1, base - 2.1);
+    if (lineCount >= 6 || length > 54) return Math.max(8.6, base - 1.6);
+    if (lineCount >= 5 || length > 42) return Math.max(9.1, base - 1.1);
+  }
+
+  if (level === 1) {
+    if (lineCount >= 5 || length > 42) return Math.max(9.2, base - 1.6);
+    if (lineCount >= 4 || length > 34) return Math.max(10, base - 1);
+  }
+
+  return base;
+}
+
+function getAdaptiveLineHeight(level: number, lineCount: number) {
+  if (level >= 2 && lineCount >= 6) return 1.14;
+  if (level >= 2 && lineCount >= 5) return 1.18;
+  if (level === 1 && lineCount >= 4) return 1.18;
+  return 1.24;
 }
 
 function getShadow(bg: string, level: number, hovered: boolean) {
@@ -84,24 +111,25 @@ const RadialNode = memo(({ data }: NodeProps) => {
     padding: getNodePadding(d.level),
   };
 
-  const fontSize = getFontSize(d.level);
+  const lineCount = d.label.split('\n').length;
+  const fontSize = getAdaptiveFontSize(d.label, d.level);
   const fontWeight = getFontWeight(d.level);
+  const lineHeight = getAdaptiveLineHeight(d.level, lineCount);
 
   return (
-    <div
+    <button
+      type="button"
       style={circleStyle}
       className="group"
-      role="button"
-      tabIndex={0}
       aria-label={d.label.replaceAll('\n', ' ')}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={d.onClick}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          d.onClick();
-        }
+      onDoubleClick={(e) => {
+        if (!d.hasChildren) return;
+        e.preventDefault();
+        e.stopPropagation();
+        d.onToggle();
       }}
     >
       {/* Keep handles at node center so edges are rendered center-to-center. */}
@@ -134,23 +162,22 @@ const RadialNode = memo(({ data }: NodeProps) => {
 
       <div className="flex flex-col items-center gap-0.5">
         <span
-          style={{ fontSize, fontWeight, lineHeight: 1.25, textAlign: 'center' }}
-          className="whitespace-pre-line"
+          style={{ fontSize, fontWeight, lineHeight, textAlign: 'center' }}
+          className="whitespace-pre-line max-w-full break-words"
         >
           {d.label}
         </span>
         {d.hasChildren && (
-          <button
-            onClick={(e) => { e.stopPropagation(); d.onToggle(); }}
+          <span
             className="mt-1 opacity-60 group-hover:opacity-100 transition-opacity"
             style={{ fontSize: 9 }}
-            type="button"
+            title={d.collapsed ? 'Mở rộng nhánh' : 'Thu gọn nhánh'}
           >
             {d.collapsed ? '＋' : '−'}
-          </button>
+          </span>
         )}
       </div>
-    </div>
+    </button>
   );
 });
 

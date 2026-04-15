@@ -20,7 +20,7 @@ const nodeTypes = { radial: RadialNode };
 const edgeTypes = { mindmap: MindmapEdge };
 
 // Sizes per level
-const SIZES = [190, 132, 96, 76];
+const SIZES = [210, 150, 124, 110];
 
 // Radial distances used by the sector-based radial layout.
 const L1_RADIUS = 360;
