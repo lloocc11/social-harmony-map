@@ -60,9 +60,9 @@ function buildRadialLayout(collapsed: Set<string>) {
   const positions = new Map<string, { x: number; y: number }>();
   const angles = new Map<string, number>();
 
-  // 4 level-1 branches are spaced evenly at 90 degrees.
-  const branchOrder = ['intro', 'sec1', 'sec2', 'sec3'];
-  const branchAngles = branchOrder.reduce<Record<string, number>>((acc, id, idx) => {
+  const rootChildren = nodeDataMap.root.children || [];
+
+  const defaultBranchAngles = rootChildren.reduce<Record<string, number>>((acc, id, idx) => {
     acc[id] = -135 + idx * 90;
     return acc;
   }, {});
@@ -113,12 +113,12 @@ function buildRadialLayout(collapsed: Set<string>) {
   placeNode('root', 0, 0, 0);
 
   // Place level-1 branches
-  const rootChildren = nodeDataMap.root.children || [];
   for (const childId of rootChildren) {
-    const angleDeg = branchAngles[childId] ?? 0;
+    const angleDeg = nodeDataMap[childId]?.layout?.angle ?? defaultBranchAngles[childId] ?? 0;
     const angleRad = (angleDeg * Math.PI) / 180;
-    const cx = Math.cos(angleRad) * L1_RADIUS;
-    const cy = Math.sin(angleRad) * L1_RADIUS;
+    const l1Radius = nodeDataMap[childId]?.layout?.radius ?? L1_RADIUS;
+    const cx = Math.cos(angleRad) * l1Radius;
+    const cy = Math.sin(angleRad) * l1Radius;
     placeNode(childId, cx, cy, angleDeg);
     addEdge('root', childId);
 
@@ -126,7 +126,8 @@ function buildRadialLayout(collapsed: Set<string>) {
 
     // Keep each branch within its own angular sector to avoid inter-branch overlap.
     const l2Children = nodeDataMap[childId]?.children || [];
-    const l2Angles = distributedAngles(l2Children.length, angleDeg, 62);
+    const l2Spread = nodeDataMap[childId]?.layout?.sectorSpread ?? 62;
+    const l2Angles = distributedAngles(l2Children.length, angleDeg, l2Spread);
 
     for (let i = 0; i < l2Children.length; i++) {
       const l2Id = l2Children[i];
@@ -134,8 +135,9 @@ function buildRadialLayout(collapsed: Set<string>) {
       const a2Rad = (a2Deg * Math.PI) / 180;
 
       // Place level-2 nodes on an outer ring for more breathing room.
-      const cx2 = Math.cos(a2Rad) * L2_RADIUS;
-      const cy2 = Math.sin(a2Rad) * L2_RADIUS;
+      const l2Radius = nodeDataMap[l2Id]?.layout?.radius ?? L2_RADIUS;
+      const cx2 = Math.cos(a2Rad) * l2Radius;
+      const cy2 = Math.sin(a2Rad) * l2Radius;
       placeNode(l2Id, cx2, cy2, a2Deg);
       addEdge(childId, l2Id);
 
@@ -144,7 +146,8 @@ function buildRadialLayout(collapsed: Set<string>) {
       // Place level-3 children
       const l3Children = nodeDataMap[l2Id]?.children || [];
       const baseL3Angle = angles.get(l2Id) ?? a2Deg;
-      const l3Angles = distributedAngles(l3Children.length, baseL3Angle, 34);
+      const l3Spread = nodeDataMap[l2Id]?.layout?.childSpread ?? 34;
+      const l3Angles = distributedAngles(l3Children.length, baseL3Angle, l3Spread);
 
       for (let j = 0; j < l3Children.length; j++) {
         const l3Id = l3Children[j];
@@ -154,8 +157,9 @@ function buildRadialLayout(collapsed: Set<string>) {
         if (!p2) continue;
 
         // Push level-3 nodes outward from their level-2 parent.
-        const cx3 = p2.x + Math.cos(a3Rad) * L3_OFFSET;
-        const cy3 = p2.y + Math.sin(a3Rad) * L3_OFFSET;
+        const l3Offset = nodeDataMap[l3Id]?.layout?.radius ?? L3_OFFSET;
+        const cx3 = p2.x + Math.cos(a3Rad) * l3Offset;
+        const cy3 = p2.y + Math.sin(a3Rad) * l3Offset;
         placeNode(l3Id, cx3, cy3, a3Deg);
         addEdge(l2Id, l3Id);
       }
@@ -181,9 +185,7 @@ function MindmapInner() {
   }, []);
 
   const openNodeDetails = useCallback((id: string) => {
-    if (id !== 'root') {
-      setSelectedNode(nodeDataMap[id] || null);
-    }
+    setSelectedNode(nodeDataMap[id] || null);
   }, []);
 
   useEffect(() => {
