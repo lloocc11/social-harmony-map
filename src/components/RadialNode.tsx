@@ -88,14 +88,21 @@ const RadialNode = memo(({ data }: NodeProps) => {
   const fontWeight = getFontWeight(d.level);
 
   return (
-    <button
-      type="button"
+    <div
       style={circleStyle}
       className="group"
+      role="button"
+      tabIndex={0}
       aria-label={d.label.replaceAll('\n', ' ')}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={d.onClick}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          d.onClick();
+        }
+      }}
     >
       {/* Keep handles at node center so edges are rendered center-to-center. */}
       <Handle
@@ -137,12 +144,13 @@ const RadialNode = memo(({ data }: NodeProps) => {
             onClick={(e) => { e.stopPropagation(); d.onToggle(); }}
             className="mt-1 opacity-60 group-hover:opacity-100 transition-opacity"
             style={{ fontSize: 9 }}
+            type="button"
           >
             {d.collapsed ? '＋' : '−'}
           </button>
         )}
       </div>
-    </button>
+    </div>
   );
 });
 

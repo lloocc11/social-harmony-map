@@ -460,17 +460,5 @@ export const nodeDataMap: Record<string, MindmapNodeData> = {
       'Chủ động phòng ngừa, ngăn chặn và kiên quyết đấu tranh với mọi hành vi lợi dụng dân tộc, tôn giáo gây mất ổn định chính trị, trật tự xã hội và phá hoại sự nghiệp xây dựng và bảo vệ Tổ quốc xã hội chủ nghĩa.',
   },
 };
-import type { MindmapNodeData } from '@/data/mindmapTypes';
-import { nodes } from '@/data/nodes';
 
-export type { MindmapNodeData, NodeCategory } from '@/data/mindmapTypes';
-
-export const nodeDataMap: Record<string, MindmapNodeData> = nodes.reduce(
-  (acc, node) => {
-    acc[node.id] = node;
-    return acc;
-  },
-  {} as Record<string, MindmapNodeData>
-);
-
-export const allNodeIds = nodes.map((node) => node.id);
+export const allNodeIds = Object.keys(nodeDataMap);

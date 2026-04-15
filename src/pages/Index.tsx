@@ -3,9 +3,10 @@ import { Sun, Moon } from 'lucide-react';
 import MindmapFlow from '@/components/MindmapFlow';
 import Chatbox from '../components/Chatbox';
 import HiddenBox from '../components/HiddenBox';
+import Casestudy from '@/components/Casestudy';
 import { nodeDataMap } from '@/data/mindmapData';
 
-type HeaderTab = 'intro' | 'mindmap' | 'chatbox' | 'hiddenbox';
+type HeaderTab = 'intro' | 'mindmap' | 'chatbox' | 'hiddenbox' | 'casestudy';
 
 export default function Index() {
   const [dark, setDark] = useState(true);
@@ -22,6 +23,7 @@ export default function Index() {
     mindmap: 'Mindmap',
     chatbox: 'Chatbox',
     hiddenbox: 'HiddenBox',
+    casestudy: 'Casestudy',
   };
 
   return (
@@ -76,6 +78,7 @@ export default function Index() {
       )}
       {tab === 'chatbox' && <Chatbox />}
       {tab === 'hiddenbox' && <HiddenBox />}
+      {tab === 'casestudy' && <Casestudy />}
     </div>
   );
 }
