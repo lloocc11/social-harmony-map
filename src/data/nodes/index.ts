@@ -14,6 +14,8 @@ import { sec2_1Node } from './sec2_1';
 import { sec2_1aNode } from './sec2_1a';
 import { sec2_1bNode } from './sec2_1b';
 import { sec2_2Node } from './sec2_2';
+import { sec2_2aNode } from './sec2_2a';
+import { sec2_2bNode } from './sec2_2b';
 import { sec3Node } from './sec3';
 import { sec3_aNode } from './sec3_a';
 import { sec3_bNode } from './sec3_b';
@@ -34,6 +36,8 @@ export const nodes: MindmapNodeData[] = [
   sec2_1aNode,
   sec2_1bNode,
   sec2_2Node,
+  sec2_2aNode,
+  sec2_2bNode,
   sec3Node,
   sec3_aNode,
   sec3_bNode,

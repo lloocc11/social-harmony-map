@@ -12,6 +12,16 @@ export const sec2_2Node: MindmapNodeData = {
       title: 'Tôn giáo Việt Nam và chính sách',
       blocks: [
         {
+          type: 'text',
+          text: 'Thực tiễn tôn giáo Việt Nam thể hiện sự đa dạng, đồng thời đặt ra yêu cầu bảo đảm quyền tự do tín ngưỡng đi đôi với ổn định xã hội.',
+        },
+      ],
+    },
+    {
+      id: 'sec2-2-points',
+      title: 'Thông tin trọng tâm',
+      blocks: [
+        {
           type: 'list',
           items: [
             'Việt Nam đa tôn giáo, hơn 26 triệu tín đồ.',
@@ -22,4 +32,5 @@ export const sec2_2Node: MindmapNodeData = {
       ],
     },
   ],
+  children: ['sec2_2a', 'sec2_2b'],
 };

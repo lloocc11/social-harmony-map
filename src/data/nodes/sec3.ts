@@ -17,6 +17,16 @@ export const sec3Node: MindmapNodeData = {
         },
       ],
     },
+    {
+      id: 'sec3-outline',
+      title: 'Hai nội dung chính',
+      blocks: [
+        {
+          type: 'list',
+          items: ['Đặc điểm quan hệ dân tộc - tôn giáo', 'Định hướng giải quyết trong thực tiễn Việt Nam'],
+        },
+      ],
+    },
   ],
   layout: {
     angle: 135,

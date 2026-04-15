@@ -185,6 +185,7 @@ function MindmapInner() {
   }, []);
 
   const openNodeDetails = useCallback((id: string) => {
+    // DetailSidebar handles both sidebar and popup modes based on node.interaction.mode.
     setSelectedNode(nodeDataMap[id] || null);
   }, []);
 

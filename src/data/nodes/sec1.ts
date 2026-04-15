@@ -20,11 +20,25 @@ export const sec1Node: MindmapNodeData = {
     },
     {
       id: 'sec1-outline',
-      title: 'Nội dung triển khai',
+      title: 'Ba nhánh triển khai',
       blocks: [
         {
           type: 'list',
           items: ['1.1 Khái niệm đặc trưng dân tộc', '1.2 Quan điểm Mác-Lênin', '1.3 Dân tộc và quan hệ ở Việt Nam'],
+        },
+      ],
+    },
+    {
+      id: 'sec1-presentation-note',
+      title: 'Gợi ý trình bày',
+      blocks: [
+        {
+          type: 'list',
+          items: [
+            'Trình bày từ lý luận sang thực tiễn để dễ theo dõi.',
+            'Đặt câu hỏi so sánh giữa nguyên tắc và thực thi chính sách.',
+            'Liên kết phần 1 với phần 3 về quan hệ dân tộc - tôn giáo.',
+          ],
         },
       ],
     },

@@ -19,6 +19,16 @@ export const sec2Node: MindmapNodeData = {
       ],
     },
     {
+      id: 'sec2-outline',
+      title: 'Hai nhánh triển khai',
+      blocks: [
+        {
+          type: 'list',
+          items: ['2.1 Quan điểm Mác-Lênin về tôn giáo', '2.2 Tôn giáo Việt Nam và chính sách của Đảng'],
+        },
+      ],
+    },
+    {
       id: 'sec2-example-image',
       title: 'Ví dụ trang có hình ảnh',
       blocks: [

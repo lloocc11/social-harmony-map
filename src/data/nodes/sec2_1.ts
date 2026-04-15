@@ -17,6 +17,16 @@ export const sec2_1Node: MindmapNodeData = {
         },
       ],
     },
+    {
+      id: 'sec2-1-focus',
+      title: 'Trọng tâm triển khai',
+      blocks: [
+        {
+          type: 'list',
+          items: ['Bản chất và nguồn gốc tôn giáo', 'Nguyên tắc giải quyết vấn đề tôn giáo'],
+        },
+      ],
+    },
   ],
   children: ['sec2_1a', 'sec2_1b'],
 };

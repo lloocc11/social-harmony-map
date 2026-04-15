@@ -17,6 +17,16 @@ export const sec1_3Node: MindmapNodeData = {
         },
       ],
     },
+    {
+      id: 'sec1-3-focus',
+      title: 'Trọng tâm thảo luận',
+      blocks: [
+        {
+          type: 'list',
+          items: ['Đặc điểm dân tộc Việt Nam', 'Chính sách dân tộc của Đảng và Nhà nước'],
+        },
+      ],
+    },
   ],
   children: ['sec1_3a', 'sec1_3b'],
 };
