@@ -1,22 +1,49 @@
 import { useMemo, useState, useEffect } from 'react';
-import { Sun, Moon } from 'lucide-react';
+import { Sun, Moon, Sparkles } from 'lucide-react';
 import MindmapFlow from '@/components/MindmapFlow';
 import Chatbox from '../components/Chatbox';
 import HiddenBox from '../components/HiddenBox';
 import Casestudy from '@/components/Casestudy';
 import { nodeDataMap } from '@/data/mindmapData';
+import type { NodeContentBlock } from '@/data/mindmapTypes';
 
 type HeaderTab = 'intro' | 'mindmap' | 'chatbox' | 'hiddenbox' | 'casestudy';
+type ThemeMode = 'light' | 'dark' | 'lgbtq';
 
 export default function Index() {
-  const [dark, setDark] = useState(true);
+  const [theme, setTheme] = useState<ThemeMode>('dark');
   const [tab, setTab] = useState<HeaderTab>('mindmap');
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', dark);
-  }, [dark]);
+    const el = document.documentElement;
+    el.classList.remove('dark', 'lgbtq');
+    if (theme === 'dark') el.classList.add('dark');
+    if (theme === 'lgbtq') el.classList.add('lgbtq');
+  }, [theme]);
 
   const introContent = useMemo(() => nodeDataMap.intro, []);
+
+  const renderIntroBlock = (block: NodeContentBlock, idx: number) => {
+    if (block.type === 'text') {
+      return (
+        <p key={idx} className="text-base text-foreground/80 leading-relaxed whitespace-pre-line">
+          {block.text}
+        </p>
+      );
+    }
+    if (block.type === 'list') {
+      return (
+        <ul key={idx} className="list-disc pl-5 space-y-1 text-base text-foreground/80">
+          {block.items.map((it) => (
+            <li key={it} className="leading-relaxed">
+              {it}
+            </li>
+          ))}
+        </ul>
+      );
+    }
+    return null;
+  };
 
   const tabLabel: Record<HeaderTab, string> = {
     intro: 'Mở đầu - Giới thiệu',
@@ -59,20 +86,32 @@ export default function Index() {
         </nav>
 
         <button
-          onClick={() => setDark(!dark)}
+          onClick={() =>
+            setTheme((t) => (t === 'light' ? 'dark' : t === 'dark' ? 'lgbtq' : 'light'))
+          }
           className="p-2 rounded-lg hover:bg-muted transition-colors"
-          title="Chuyển đổi giao diện"
+          title="Chuyển đổi giao diện (Light/Dark/LGBTQ+)"
+          aria-label="Chuyển đổi giao diện"
         >
-          {dark ? <Sun size={16} className="text-muted-foreground" /> : <Moon size={16} className="text-muted-foreground" />}
+          {theme === 'light' && <Sun size={16} className="text-muted-foreground" />}
+          {theme === 'dark' && <Moon size={16} className="text-muted-foreground" />}
+          {theme === 'lgbtq' && <Sparkles size={16} className="text-muted-foreground" />}
         </button>
       </header>
 
       {tab === 'mindmap' && <MindmapFlow />}
       {tab === 'intro' && (
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-y-auto">
           <div className="max-w-4xl mx-auto px-6 py-8">
             <h2 className="text-lg font-bold whitespace-pre-line">{introContent.label}</h2>
-            <p className="mt-4 text-sm text-foreground/80 leading-relaxed whitespace-pre-line">{introContent.detail}</p>
+            <div className="mt-5 space-y-6">
+              {introContent.detailPages.map((page) => (
+                <section key={page.id} className="rounded-xl border border-border bg-card p-5">
+                  <h3 className="text-base font-semibold">{page.title}</h3>
+                  <div className="mt-3 space-y-3">{page.blocks.map(renderIntroBlock)}</div>
+                </section>
+              ))}
+            </div>
           </div>
         </div>
       )}
