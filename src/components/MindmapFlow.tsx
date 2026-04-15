@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   ReactFlow,
   Background,
@@ -28,27 +28,23 @@ function buildLayout(collapsed: Set<string>) {
     if (!data) return 0;
 
     const x = depth === 0 ? 0 : X_GAP.slice(0, depth + 1).reduce((a, b) => a + b, 0);
-    const startY = yOffset;
     const children = data.children || [];
     const isCollapsed = collapsed.has(id);
     const visibleChildren = isCollapsed ? [] : children;
 
-    let totalHeight = 0;
-    const childYPositions: number[] = [];
-
+    const childMidpoints: number[] = [];
     for (const childId of visibleChildren) {
+      const startY = yOffset;
       const h = traverse(childId, depth + 1, id);
-      childYPositions.push(yOffset - h / 2);
-      totalHeight += h;
+      childMidpoints.push(startY + h / 2);
     }
 
-    const nodeY = visibleChildren.length > 0
-      ? (childYPositions[0] + childYPositions[childYPositions.length - 1]) / 2
-      : yOffset;
-
-    if (visibleChildren.length === 0) {
+    let nodeY: number;
+    if (childMidpoints.length > 0) {
+      nodeY = (childMidpoints[0] + childMidpoints[childMidpoints.length - 1]) / 2;
+    } else {
+      nodeY = yOffset;
       yOffset += Y_GAP[Math.min(depth, Y_GAP.length - 1)];
-      totalHeight = Y_GAP[Math.min(depth, Y_GAP.length - 1)];
     }
 
     nodes.push({
@@ -71,11 +67,12 @@ function buildLayout(collapsed: Set<string>) {
         target: id,
         type: 'smoothstep',
         style: { stroke: 'hsl(var(--muted-foreground))', strokeWidth: 1.5, opacity: 0.5 },
-        animated: false,
       });
     }
 
-    return totalHeight;
+    return visibleChildren.length > 0
+      ? yOffset - (nodeY - (childMidpoints.length > 0 ? 0 : 0))
+      : Y_GAP[Math.min(depth, Y_GAP.length - 1)];
   }
 
   traverse('root', 0);
@@ -85,14 +82,13 @@ function buildLayout(collapsed: Set<string>) {
 export default function MindmapFlow() {
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const [selectedNode, setSelectedNode] = useState<MindmapNodeData | null>(null);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  const { layoutNodes, layoutEdges } = useMemo(() => {
-    const { nodes, edges } = buildLayout(collapsed);
-    return { layoutNodes: nodes, layoutEdges: edges };
-  }, [collapsed]);
+  useEffect(() => {
+    const { nodes: layoutNodes, edges: layoutEdges } = buildLayout(collapsed);
 
-  const nodesWithHandlers = useMemo(() => {
-    return layoutNodes.map((n) => ({
+    const withHandlers = layoutNodes.map((n) => ({
       ...n,
       data: {
         ...n.data,
@@ -107,16 +103,10 @@ export default function MindmapFlow() {
         onClick: () => setSelectedNode(nodeDataMap[n.id] || null),
       },
     }));
-  }, [layoutNodes]);
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(nodesWithHandlers);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(layoutEdges);
-
-  // Sync when layout changes
-  useMemo(() => {
-    setNodes(nodesWithHandlers);
+    setNodes(withHandlers);
     setEdges(layoutEdges);
-  }, [nodesWithHandlers, layoutEdges, setNodes, setEdges]);
+  }, [collapsed, setNodes, setEdges]);
 
   const expandAll = useCallback(() => setCollapsed(new Set()), []);
   const collapseAll = useCallback(() => {
