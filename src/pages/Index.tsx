@@ -4,10 +4,11 @@ import MindmapFlow from '@/components/MindmapFlow';
 import Chatbox from '../components/Chatbox';
 import HiddenBox from '../components/HiddenBox';
 import Casestudy from '@/components/Casestudy';
+import RealtimeQA from '../components/RealtimeQA';
 import { nodeDataMap } from '@/data/mindmapData';
 import type { NodeContentBlock } from '@/data/mindmapTypes';
 
-type HeaderTab = 'intro' | 'mindmap' | 'chatbox' | 'hiddenbox' | 'casestudy';
+type HeaderTab = 'intro' | 'mindmap' | 'qna' | 'chatbox' | 'hiddenbox' | 'casestudy';
 type ThemeMode = 'light' | 'dark' | 'lgbtq';
 
 const themeOptions: Array<{
@@ -64,6 +65,7 @@ export default function Index() {
   const tabLabel: Record<HeaderTab, string> = {
     intro: 'Mở đầu - Giới thiệu',
     mindmap: 'Mindmap',
+    qna: 'Q&A',
     chatbox: 'Chatbox',
     hiddenbox: 'HiddenBox',
     casestudy: 'Casestudy',
@@ -132,6 +134,7 @@ export default function Index() {
       </header>
 
       {tab === 'mindmap' && <MindmapFlow />}
+      {tab === 'qna' && <RealtimeQA />}
       {tab === 'intro' && (
         <div className="flex-1 overflow-y-auto">
           <div className="max-w-4xl mx-auto px-6 py-8">
