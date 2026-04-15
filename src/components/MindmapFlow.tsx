@@ -1,93 +1,167 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   ReactFlow,
   Background,
   Controls,
   useNodesState,
   useEdgesState,
+  useReactFlow,
+  ReactFlowProvider,
   type Node,
   type Edge,
   BackgroundVariant,
 } from '@xyflow/react';
-import MindmapNode from './MindmapNode';
+import RadialNode from './RadialNode';
 import DetailSidebar from './DetailSidebar';
 import { nodeDataMap, allNodeIds, type MindmapNodeData } from '@/data/mindmapData';
 
-const nodeTypes = { mindmap: MindmapNode };
+const nodeTypes = { radial: RadialNode };
 
-const X_GAP = [0, 360, 320, 280, 260];
-const Y_GAP = [0, 120, 80, 65, 55];
+// Sizes per level
+const SIZES = [160, 110, 80, 65];
 
-function buildLayout(collapsed: Set<string>) {
+// Radial distances per level
+const RADII = [0, 260, 200, 150];
+
+function getSize(level: number) {
+  return SIZES[Math.min(level, SIZES.length - 1)];
+}
+
+/**
+ * Compute radial positions.
+ * Root at center (0,0).
+ * Level-1 nodes around root at RADII[1].
+ * Level-2 nodes around their parent at RADII[2].
+ * Level-3 nodes around their parent at RADII[3].
+ */
+function buildRadialLayout(collapsed: Set<string>) {
   const nodes: Node[] = [];
   const edges: Edge[] = [];
-  let yOffset = 0;
+  const positions = new Map<string, { x: number; y: number }>();
 
-  function traverse(id: string, depth: number, parentId?: string): number {
+  // Branch angles for level-1 nodes (4 branches spread around)
+  const branchAngles: Record<string, number> = {
+    intro: -120, // upper-left
+    sec1: -30,   // upper-right
+    sec2: 120,   // lower-right
+    sec3: 210,   // lower-left
+  };
+
+  function placeNode(id: string, cx: number, cy: number) {
     const data = nodeDataMap[id];
-    if (!data) return 0;
-
-    const x = depth === 0 ? 0 : X_GAP.slice(0, depth + 1).reduce((a, b) => a + b, 0);
-    const children = data.children || [];
-    const isCollapsed = collapsed.has(id);
-    const visibleChildren = isCollapsed ? [] : children;
-
-    const childMidpoints: number[] = [];
-    for (const childId of visibleChildren) {
-      const startY = yOffset;
-      const h = traverse(childId, depth + 1, id);
-      childMidpoints.push(startY + h / 2);
-    }
-
-    let nodeY: number;
-    if (childMidpoints.length > 0) {
-      nodeY = (childMidpoints[0] + childMidpoints[childMidpoints.length - 1]) / 2;
-    } else {
-      nodeY = yOffset;
-      yOffset += Y_GAP[Math.min(depth, Y_GAP.length - 1)];
-    }
+    if (!data) return;
+    const size = getSize(data.level);
+    // Position is top-left corner, center the circle
+    const x = cx - size / 2;
+    const y = cy - size / 2;
+    positions.set(id, { x: cx, y: cy });
 
     nodes.push({
       id,
-      type: 'mindmap',
-      position: { x, y: nodeY },
+      type: 'radial',
+      position: { x, y },
       data: {
         label: data.label,
         category: data.category,
         level: data.level,
-        hasChildren: children.length > 0,
-        collapsed: isCollapsed,
+        hasChildren: (data.children?.length ?? 0) > 0,
+        collapsed: collapsed.has(id),
+        size,
       },
     });
-
-    if (parentId) {
-      edges.push({
-        id: `${parentId}-${id}`,
-        source: parentId,
-        target: id,
-        type: 'smoothstep',
-        style: { stroke: 'hsl(var(--muted-foreground))', strokeWidth: 1.5, opacity: 0.5 },
-      });
-    }
-
-    return visibleChildren.length > 0
-      ? yOffset - (nodeY - (childMidpoints.length > 0 ? 0 : 0))
-      : Y_GAP[Math.min(depth, Y_GAP.length - 1)];
   }
 
-  traverse('root', 0);
+  function addEdge(parentId: string, childId: string) {
+    const parentCat = nodeDataMap[parentId]?.category || 'root';
+    const childCat = nodeDataMap[childId]?.category || parentCat;
+    const cat = childCat;
+    const varMap: Record<string, string> = {
+      root: 'var(--node-root-bg)',
+      intro: 'var(--node-intro-bg)',
+      dantoc: 'var(--node-dantoc-bg)',
+      tongiao: 'var(--node-tongiao-bg)',
+      quanhe: 'var(--node-quanhe-bg)',
+    };
+    edges.push({
+      id: `${parentId}-${childId}`,
+      source: parentId,
+      target: childId,
+      type: 'default',
+      style: {
+        stroke: `hsl(${varMap[cat] || varMap.root})`,
+        strokeWidth: 2.5,
+        opacity: 0.5,
+      },
+    });
+  }
+
+  // Place root
+  placeNode('root', 0, 0);
+
+  // Place level-1 branches
+  const rootChildren = nodeDataMap.root.children || [];
+  for (const childId of rootChildren) {
+    const angleDeg = branchAngles[childId] ?? 0;
+    const angleRad = (angleDeg * Math.PI) / 180;
+    const r = RADII[1];
+    const cx = Math.cos(angleRad) * r;
+    const cy = Math.sin(angleRad) * r;
+    placeNode(childId, cx, cy);
+    addEdge('root', childId);
+
+    if (collapsed.has(childId)) continue;
+
+    // Place level-2 children
+    const l2Children = nodeDataMap[childId]?.children || [];
+    const l2Count = l2Children.length;
+    const spreadAngle = l2Count <= 2 ? 50 : 40;
+    const startAngle = angleDeg - ((l2Count - 1) * spreadAngle) / 2;
+
+    for (let i = 0; i < l2Count; i++) {
+      const l2Id = l2Children[i];
+      const a2Deg = startAngle + i * spreadAngle;
+      const a2Rad = (a2Deg * Math.PI) / 180;
+      const r2 = RADII[2];
+      const parentPos = positions.get(childId)!;
+      const cx2 = parentPos.x + Math.cos(a2Rad) * r2;
+      const cy2 = parentPos.y + Math.sin(a2Rad) * r2;
+      placeNode(l2Id, cx2, cy2);
+      addEdge(childId, l2Id);
+
+      if (collapsed.has(l2Id)) continue;
+
+      // Place level-3 children
+      const l3Children = nodeDataMap[l2Id]?.children || [];
+      const l3Count = l3Children.length;
+      const spreadAngle3 = l3Count <= 2 ? 45 : 35;
+      const startAngle3 = a2Deg - ((l3Count - 1) * spreadAngle3) / 2;
+
+      for (let j = 0; j < l3Count; j++) {
+        const l3Id = l3Children[j];
+        const a3Deg = startAngle3 + j * spreadAngle3;
+        const a3Rad = (a3Deg * Math.PI) / 180;
+        const r3 = RADII[3];
+        const p2 = positions.get(l2Id)!;
+        const cx3 = p2.x + Math.cos(a3Rad) * r3;
+        const cy3 = p2.y + Math.sin(a3Rad) * r3;
+        placeNode(l3Id, cx3, cy3);
+        addEdge(l2Id, l3Id);
+      }
+    }
+  }
+
   return { nodes, edges };
 }
 
-export default function MindmapFlow() {
+function MindmapInner() {
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const [selectedNode, setSelectedNode] = useState<MindmapNodeData | null>(null);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const { fitView } = useReactFlow();
 
   useEffect(() => {
-    const { nodes: layoutNodes, edges: layoutEdges } = buildLayout(collapsed);
-
+    const { nodes: layoutNodes, edges: layoutEdges } = buildRadialLayout(collapsed);
     const withHandlers = layoutNodes.map((n) => ({
       ...n,
       data: {
@@ -95,24 +169,29 @@ export default function MindmapFlow() {
         onToggle: () => {
           setCollapsed((prev) => {
             const next = new Set(prev);
-            if (next.has(n.id)) next.delete(n.id);
-            else next.add(n.id);
+            next.has(n.id) ? next.delete(n.id) : next.add(n.id);
             return next;
           });
         },
-        onClick: () => setSelectedNode(nodeDataMap[n.id] || null),
+        onClick: () => {
+          if (n.id !== 'root') setSelectedNode(nodeDataMap[n.id] || null);
+        },
       },
     }));
-
     setNodes(withHandlers);
     setEdges(layoutEdges);
-  }, [collapsed, setNodes, setEdges]);
+    setTimeout(() => fitView({ padding: 0.15, duration: 400 }), 50);
+  }, [collapsed, setNodes, setEdges, fitView]);
 
   const expandAll = useCallback(() => setCollapsed(new Set()), []);
   const collapseAll = useCallback(() => {
     const ids = allNodeIds.filter((id) => (nodeDataMap[id]?.children?.length ?? 0) > 0);
     setCollapsed(new Set(ids));
   }, []);
+  const resetView = useCallback(() => {
+    setCollapsed(new Set());
+    setTimeout(() => fitView({ padding: 0.15, duration: 500 }), 100);
+  }, [fitView]);
 
   return (
     <div className="flex-1 relative">
@@ -123,25 +202,40 @@ export default function MindmapFlow() {
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
         fitView
-        fitViewOptions={{ padding: 0.3 }}
-        minZoom={0.2}
-        maxZoom={2}
+        fitViewOptions={{ padding: 0.15 }}
+        minZoom={0.15}
+        maxZoom={2.5}
         proOptions={{ hideAttribution: true }}
+        defaultEdgeOptions={{ type: 'default' }}
       >
-        <Background variant={BackgroundVariant.Dots} gap={24} size={1} className="!bg-background" />
-        <Controls className="!bg-card !border-border !shadow-lg [&>button]:!bg-card [&>button]:!border-border [&>button]:!text-foreground" />
+        <Background variant={BackgroundVariant.Dots} gap={30} size={1} className="!bg-background" />
+        <Controls
+          showInteractive={false}
+          className="!bg-card !border-border !shadow-lg [&>button]:!bg-card [&>button]:!border-border [&>button]:!text-foreground"
+        />
       </ReactFlow>
 
       <div className="absolute top-4 right-4 flex gap-2 z-10">
-        <button onClick={expandAll} className="px-3 py-1.5 text-xs font-medium rounded-md bg-secondary text-secondary-foreground hover:brightness-110 transition-all">
-          Mở rộng tất cả
+        <button onClick={resetView} className="px-3 py-1.5 text-xs font-medium rounded-lg bg-card text-foreground border border-border shadow-sm hover:bg-muted transition-all">
+          Reset View
         </button>
-        <button onClick={collapseAll} className="px-3 py-1.5 text-xs font-medium rounded-md bg-secondary text-secondary-foreground hover:brightness-110 transition-all">
-          Thu gọn tất cả
+        <button onClick={expandAll} className="px-3 py-1.5 text-xs font-medium rounded-lg bg-card text-foreground border border-border shadow-sm hover:bg-muted transition-all">
+          Mở rộng
+        </button>
+        <button onClick={collapseAll} className="px-3 py-1.5 text-xs font-medium rounded-lg bg-card text-foreground border border-border shadow-sm hover:bg-muted transition-all">
+          Thu gọn
         </button>
       </div>
 
       <DetailSidebar node={selectedNode} onClose={() => setSelectedNode(null)} />
     </div>
+  );
+}
+
+export default function MindmapFlow() {
+  return (
+    <ReactFlowProvider>
+      <MindmapInner />
+    </ReactFlowProvider>
   );
 }
