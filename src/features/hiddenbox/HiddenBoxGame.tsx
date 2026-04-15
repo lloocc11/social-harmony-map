@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import TileGrid from './TileGrid';
 import QuestionDialog from './QuestionDialog';
 import { createTiles } from './gameUtils';
-import type { Tile, TileContent } from './types';
+import type { RevealResult, Tile, TileContent } from './types';
 
 export default function HiddenBoxGame() {
   const [tiles, setTiles] = useState<Tile[]>(() => createTiles());
@@ -25,9 +25,11 @@ export default function HiddenBoxGame() {
     [tiles],
   );
 
-  const markRevealed = useCallback(() => {
+  const markRevealed = useCallback((revealResult: RevealResult) => {
     if (activeIndex === null) return;
-    setTiles((prev) => prev.map((t) => (t.index === activeIndex ? { ...t, revealed: true } : t)));
+    setTiles((prev) =>
+      prev.map((t) => (t.index === activeIndex ? { ...t, revealed: true, revealResult } : t)),
+    );
     setActiveIndex(null);
   }, [activeIndex]);
 
