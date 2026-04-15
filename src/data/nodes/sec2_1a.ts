@@ -9,52 +9,71 @@ export const sec2_1aNode: MindmapNodeData = {
   detailPages: [
     {
       id: 'sec2-1a-main',
-      title: 'Bản chất và nguồn gốc tôn giáo',
+      title: '2.1.1 Bản chất, nguồn gốc và tính chất của tôn giáo',
       blocks: [
         {
           type: 'text',
-          text: 'Tôn giáo được nhìn nhận vừa là hiện tượng xã hội - lịch sử, vừa phản ánh nhu cầu tinh thần của quần chúng trong bối cảnh cụ thể.',
+          text: 'Theo chủ nghĩa Mác - Lênin, tôn giáo là hiện tượng xã hội - văn hóa do con người sáng tạo ra. Việc nhận thức đúng bản chất, nguồn gốc và tính chất của tôn giáo là cơ sở để giải quyết đúng đắn vấn đề tôn giáo trong thực tiễn.',
         },
       ],
     },
     {
-      id: 'sec2-1a-points',
-      title: 'Nội dung cốt lõi',
+      id: 'sec2-1a-essence',
+      title: 'Về bản chất của tôn giáo',
+      blocks: [
+        {
+          type: 'text',
+          text: 'Tôn giáo là một hình thái ý thức xã hội phản ánh hư ảo hiện thực khách quan. Thông qua sự phản ánh này, các lực lượng tự nhiên và xã hội trở thành những lực lượng siêu nhiên, thần bí chi phối cuộc sống con người.',
+        },
+        {
+          type: 'text',
+          text: 'Dưới góc độ thực thể xã hội, tôn giáo được nhận diện qua các tiêu chí: có niềm tin sâu sắc vào đấng siêu nhiên, có hệ thống giáo thuyết (giáo lý, luật lệ, lễ nghi), cơ sở thờ tự, tổ chức nhân sự quản lý và hệ thống tín đồ đông đảo.',
+        },
+        {
+          type: 'text',
+          text: 'Khẳng định quan trọng là: tôn giáo do con người sáng tạo vì mục đích, lợi ích và phản ánh ước mơ của mình; nhưng sau đó con người lại có thể bị lệ thuộc vào tôn giáo. Mọi quan niệm và thiết chế tôn giáo đều chịu sự quy định của sản xuất vật chất và quan hệ kinh tế, và biến đổi theo cơ sở kinh tế - xã hội.',
+        },
+      ],
+    },
+    {
+      id: 'sec2-1a-distinguish',
+      title: 'Phân biệt tôn giáo, tín ngưỡng và mê tín dị đoan',
       blocks: [
         {
           type: 'list',
           items: [
-            'Bản chất: phản ánh hư ảo thế giới khách quan.',
-            'Nguồn gốc: kinh tế - xã hội, nhận thức, tâm lý.',
-            'Tính chất: lịch sử, quần chúng, chính trị.',
+            'Tín ngưỡng: hệ thống niềm tin, sự ngưỡng mộ trước các lực lượng thần thánh; ví dụ thờ cúng tổ tiên, thờ anh hùng dân tộc.',
+            'Mê tín dị đoan: niềm tin mê muội, viển vông, phi khoa học, dễ dẫn đến hành vi cực đoan, sai lệch và gây tổn hại cho cá nhân, cộng đồng.',
+            'Cần phân biệt rõ để vừa tôn trọng nhu cầu tinh thần chính đáng, vừa đấu tranh với các biểu hiện lệch chuẩn và phản khoa học.',
           ],
         },
       ],
     },
     {
-      id: 'sec2-1a-full-legacy',
-      title: 'Nội dung đầy đủ (legacy)',
+      id: 'sec2-1a-origins',
+      title: 'Về nguồn gốc của tôn giáo',
       blocks: [
         {
-          type: 'text',
-          text: `Thứ nhất: Bản chất của tôn giáo
-Theo chủ nghĩa Mác - Lênin, tôn giáo là một hình thái ý thức xã hội, là sự phản ánh hư ảo hiện thực khách quan vào trong đầu óc con người. Ph.Ăngghen viết: "Tất cả mọi tôn giáo chẳng qua chỉ là sự phản ánh hư ảo - vào trong đầu óc của con người - của những lực lượng ở bên ngoài chi phối cuộc sống hàng ngày của họ; chỉ là sự phản ánh trong đó những lực lượng ở trần thế đã mang hình thức những lực lượng siêu trần thế".
-Tôn giáo là một thực thể xã hội, với các tiêu chí cơ bản sau:
-
-Có niềm tin sâu sắc vào đấng siêu nhiên, thần linh (niềm tin tôn giáo).
-Có hệ thống giáo thuyết (giáo lý, giáo luật, lễ nghi).
-Có hệ thống cơ sở thờ tự.
-Có tổ chức và nhân sự quản lý việc đạo.
-Có hệ thống tín đồ đông đảo.
-
-Chủ nghĩa Mác - Lênin khẳng định: Tôn giáo là sản phẩm do con người sáng tạo ra, phản ánh ước mơ, nguyện vọng và những điều kiện sống nhất định của họ. Tuy nhiên, con người lại bị lệ thuộc vào tôn giáo mà họ tạo ra. Sản xuất vật chất và quan hệ kinh tế là nhân tố quyết định sự tồn tại và phát triển của tôn giáo.
-Về thế giới quan, tôn giáo mang tính duy tâm, khác với thế giới quan duy vật biện chứng của chủ nghĩa Mác - Lênin. Tuy nhiên, những người cộng sản không xem thường hay trấn áp nhu cầu tín ngưỡng của nhân dân, mà luôn tôn trọng quyền tự do tín ngưỡng, theo hoặc không theo tôn giáo.
-
-Thứ hai: Nguồn gốc của tôn giáo
-Tôn giáo có ba nguồn gốc chính: nguồn gốc tự nhiên và kinh tế - xã hội; nguồn gốc nhận thức; nguồn gốc tâm lý.
-
-Thứ ba: Tính chất của tôn giáo
-Tôn giáo có tính lịch sử, tính quần chúng và tính chính trị, biến đổi theo điều kiện xã hội cụ thể.`,
+          type: 'list',
+          items: [
+            'Nguồn gốc tự nhiên, kinh tế - xã hội: Trong xã hội nguyên thủy, con người yếu đuối trước tự nhiên nên gán cho tự nhiên sức mạnh thần bí; trong xã hội có giai cấp, sự áp bức, bóc lột khiến quần chúng trông chờ vào sự giải phóng từ lực lượng siêu nhiên.',
+            'Nguồn gốc nhận thức: Khoảng cách giữa điều "biết" và "chưa biết" khi nhận thức còn giới hạn là mảnh đất cho tôn giáo tồn tại; thực chất là sự tuyệt đối hóa mặt chủ thể nhận thức, biến nội dung khách quan thành cái siêu nhiên.',
+            'Nguồn gốc tâm lý: Sợ hãi trước tự nhiên, xã hội, bệnh tật, rủi ro hoặc mong muốn bình yên khi làm việc lớn dễ đưa con người đến với tôn giáo; kể cả những tình cảm tích cực như biết ơn, tôn kính người có công cũng có thể là nền tảng hình thành niềm tin tôn giáo.',
+          ],
+        },
+      ],
+    },
+    {
+      id: 'sec2-1a-characteristics',
+      title: 'Về tính chất của tôn giáo',
+      blocks: [
+        {
+          type: 'list',
+          items: [
+            'Tính lịch sử: Tôn giáo có quá trình hình thành, tồn tại và biến đổi để thích nghi với từng giai đoạn lịch sử, từng chế độ chính trị - xã hội. Khi khoa học, giáo dục phát triển, tôn giáo dần mất đi vị trí tuyệt đối trong nhận thức xã hội.',
+            'Tính quần chúng: Tôn giáo phổ biến với số lượng tín đồ rất đông, là nơi sinh hoạt văn hóa, tinh thần của nhiều cộng đồng; phản ánh khát vọng về một xã hội tự do, bình đẳng, bác ái nên có sức thu hút rộng.',
+            'Tính chính trị: Xuất hiện rõ khi xã hội phân chia giai cấp đối kháng. Tôn giáo mang tính chính trị tiêu cực khi bị giai cấp thống trị lợi dụng để phục vụ lợi ích bóc lột, chống lại lực lượng lao động và sự tiến bộ xã hội.',
+          ],
         },
       ],
     },

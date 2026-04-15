@@ -28,20 +28,6 @@ export const sec1Node: MindmapNodeData = {
         },
       ],
     },
-    {
-      id: 'sec1-presentation-note',
-      title: 'Gợi ý trình bày',
-      blocks: [
-        {
-          type: 'list',
-          items: [
-            'Trình bày từ lý luận sang thực tiễn để dễ theo dõi.',
-            'Đặt câu hỏi so sánh giữa nguyên tắc và thực thi chính sách.',
-            'Liên kết phần 1 với phần 3 về quan hệ dân tộc - tôn giáo.',
-          ],
-        },
-      ],
-    },
   ],
   layout: {
     angle: -45,

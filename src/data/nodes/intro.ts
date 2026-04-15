@@ -31,20 +31,6 @@ export const introNode: MindmapNodeData = {
         },
       ],
     },
-    {
-      id: 'intro-presentation-note',
-      title: 'Gợi ý thuyết trình',
-      blocks: [
-        {
-          type: 'list',
-          items: [
-            'Mở bằng ví dụ thực tiễn về đa dân tộc - đa tôn giáo ở Việt Nam.',
-            'Liên hệ ngắn với bối cảnh địa phương hoặc tin tức hiện tại.',
-            'Kết thúc phần mở đầu bằng câu hỏi định hướng cho người nghe.',
-          ],
-        },
-      ],
-    },
   ],
   layout: {
     angle: -135,
