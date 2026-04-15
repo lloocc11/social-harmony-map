@@ -6,40 +6,40 @@
 
 @layer base {
   :root {
-    --background: 40 20% 97%;
+    --background: 220 20% 97%;
     --foreground: 220 20% 10%;
     --card: 0 0% 100%;
     --card-foreground: 220 20% 10%;
     --popover: 0 0% 100%;
     --popover-foreground: 220 20% 10%;
-    --primary: 220 60% 45%;
+    --primary: 220 60% 50%;
     --primary-foreground: 0 0% 100%;
     --secondary: 220 15% 92%;
     --secondary-foreground: 220 20% 15%;
     --muted: 220 15% 94%;
     --muted-foreground: 220 10% 45%;
-    --accent: 35 90% 55%;
+    --accent: 38 92% 55%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
     --border: 220 15% 88%;
     --input: 220 15% 88%;
-    --ring: 220 60% 45%;
+    --ring: 220 60% 50%;
     --radius: 0.625rem;
 
-    /* Section colors */
-    --node-root: 35 85% 52%;
+    --node-root-bg: 38 92% 55%;
     --node-root-fg: 0 0% 100%;
-    --node-intro: 280 45% 55%;
+    --node-intro-bg: 280 55% 58%;
     --node-intro-fg: 0 0% 100%;
-    --node-dantoc: 210 70% 50%;
+    --node-dantoc-bg: 210 75% 52%;
     --node-dantoc-fg: 0 0% 100%;
-    --node-tongiao: 270 55% 55%;
+    --node-tongiao-bg: 265 55% 58%;
     --node-tongiao-fg: 0 0% 100%;
-    --node-quanhe: 150 55% 40%;
+    --node-quanhe-bg: 160 60% 42%;
     --node-quanhe-fg: 0 0% 100%;
-    --node-sub: 220 20% 96%;
-    --node-sub-fg: 220 20% 15%;
+    --node-leaf-bg: 220 15% 94%;
+    --node-leaf-fg: 220 20% 15%;
+    --node-leaf-border: 220 15% 82%;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 240 5.3% 26.1%;
@@ -52,46 +52,47 @@
   }
 
   .dark {
-    --background: 225 25% 8%;
+    --background: 225 25% 7%;
     --foreground: 220 15% 90%;
-    --card: 225 20% 12%;
+    --card: 225 20% 11%;
     --card-foreground: 220 15% 90%;
-    --popover: 225 20% 12%;
+    --popover: 225 20% 11%;
     --popover-foreground: 220 15% 90%;
-    --primary: 215 65% 55%;
+    --primary: 215 70% 58%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 225 18% 18%;
+    --secondary: 225 18% 16%;
     --secondary-foreground: 220 15% 85%;
-    --muted: 225 15% 16%;
-    --muted-foreground: 220 10% 55%;
-    --accent: 35 90% 55%;
+    --muted: 225 15% 14%;
+    --muted-foreground: 220 10% 50%;
+    --accent: 38 92% 55%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 62% 30%;
     --destructive-foreground: 0 0% 100%;
-    --border: 225 15% 18%;
-    --input: 225 15% 18%;
-    --ring: 215 65% 55%;
+    --border: 225 15% 16%;
+    --input: 225 15% 16%;
+    --ring: 215 70% 58%;
 
-    --node-root: 35 85% 52%;
+    --node-root-bg: 38 88% 52%;
     --node-root-fg: 0 0% 100%;
-    --node-intro: 280 50% 60%;
+    --node-intro-bg: 280 55% 55%;
     --node-intro-fg: 0 0% 100%;
-    --node-dantoc: 210 75% 55%;
+    --node-dantoc-bg: 210 70% 50%;
     --node-dantoc-fg: 0 0% 100%;
-    --node-tongiao: 270 60% 62%;
+    --node-tongiao-bg: 265 55% 55%;
     --node-tongiao-fg: 0 0% 100%;
-    --node-quanhe: 150 55% 45%;
+    --node-quanhe-bg: 160 55% 40%;
     --node-quanhe-fg: 0 0% 100%;
-    --node-sub: 225 18% 18%;
-    --node-sub-fg: 220 15% 85%;
+    --node-leaf-bg: 225 18% 16%;
+    --node-leaf-fg: 220 15% 85%;
+    --node-leaf-border: 225 15% 22%;
 
     --sidebar-background: 225 20% 10%;
     --sidebar-foreground: 220 15% 85%;
     --sidebar-primary: 215 65% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 225 15% 16%;
+    --sidebar-accent: 225 15% 14%;
     --sidebar-accent-foreground: 220 15% 85%;
-    --sidebar-border: 225 15% 18%;
+    --sidebar-border: 225 15% 16%;
     --sidebar-ring: 215 65% 55%;
   }
 }
