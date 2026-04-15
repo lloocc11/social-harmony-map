@@ -29,10 +29,17 @@ export type TileContent =
   | { kind: 'question'; questionId: string }
   | SpecialTile;
 
+export type RevealResult =
+  | { kind: 'correct'; points: number }
+  | { kind: 'wrong'; points: number }
+  | { kind: 'bonus'; points: 200 }
+  | { kind: 'bomb'; points: -100 };
+
 export type Tile = {
   index: number; // 1..24 shown to users
   content: TileContent;
   revealed: boolean;
+  revealResult?: RevealResult;
 };
 
 export function pointsForDifficulty(d: Difficulty) {
