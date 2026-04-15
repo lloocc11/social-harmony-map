@@ -158,6 +158,34 @@ html.lgbtq body {
   background-attachment: fixed;
 }
 
+.lgbtq-app-bg {
+  background-color: hsl(var(--background));
+  background-image:
+    radial-gradient(circle at 14% 10%, rgba(228, 3, 3, 0.36) 0%, transparent 38%),
+    radial-gradient(circle at 85% 14%, rgba(255, 140, 0, 0.3) 0%, transparent 36%),
+    radial-gradient(circle at 18% 88%, rgba(255, 237, 0, 0.26) 0%, transparent 40%),
+    radial-gradient(circle at 82% 82%, rgba(0, 128, 38, 0.26) 0%, transparent 42%),
+    linear-gradient(
+      132deg,
+      rgba(228, 3, 3, 0.46) 0%,
+      rgba(255, 140, 0, 0.44) 16%,
+      rgba(255, 237, 0, 0.4) 33%,
+      rgba(0, 128, 38, 0.36) 50%,
+      rgba(0, 77, 255, 0.34) 66%,
+      rgba(117, 7, 135, 0.44) 83%,
+      rgba(117, 7, 135, 0.44) 100%
+    );
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+html.lgbtq .react-flow,
+html.lgbtq .react-flow__renderer,
+html.lgbtq .react-flow__pane,
+html.lgbtq .react-flow__background {
+  background: transparent !important;
+}
+
 .react-flow__attribution {
   display: none !important;
 }
