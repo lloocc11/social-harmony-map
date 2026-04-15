@@ -117,3 +117,34 @@ interface NodeInteractionConfig {
 
 ## Node rendering note
 - Node renderer dang ap dung kich thuoc lon hon theo level va co co che font/adaptive line-height cho nhan dai, giup han che tran chu ra ngoai hinh tron.
+
+## UI theme note
+- Giao dien ho tro 3 che do theme: `light`, `dark`, `lgbtq`.
+- Theme duoc luu vao localStorage key `theme-mode` de giu lua chon sau khi reload trang.
+- O che do `lgbtq`, nen cau vong duoc ap truc tiep len app container (`lgbtq-app-bg`) va cac layer nen cua React Flow duoc de trong suot de mau nen hien thi dung.
+
+## Realtime Q&A note
+- Da bo sung component `RealtimeQA` voi che do hoi-dap realtime, khong can auth.
+- Tab moi `Q&A` duoc them vao trang chinh de nguoi dung dat cau hoi va tra loi truc tiep.
+- Hien tai luong thao tac la CRU (Create/Read/Update), khong co Delete.
+
+### Firebase collections
+- `qa_questions`
+  - `author: string`
+  - `text: string`
+  - `createdAt: serverTimestamp`
+  - `updatedAt: serverTimestamp | null`
+- `qa_answers`
+  - `questionId: string`
+  - `author: string`
+  - `text: string`
+  - `createdAt: serverTimestamp`
+  - `updatedAt: serverTimestamp | null`
+
+### Firebase env keys
+- `VITE_FIREBASE_API_KEY`
+- `VITE_FIREBASE_AUTH_DOMAIN`
+- `VITE_FIREBASE_PROJECT_ID`
+- `VITE_FIREBASE_STORAGE_BUCKET`
+- `VITE_FIREBASE_MESSAGING_SENDER_ID`
+- `VITE_FIREBASE_APP_ID`

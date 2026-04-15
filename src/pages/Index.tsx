@@ -4,14 +4,30 @@ import MindmapFlow from '@/components/MindmapFlow';
 import Chatbox from '../components/Chatbox';
 import HiddenBox from '../components/HiddenBox';
 import Casestudy from '@/components/Casestudy';
+import RealtimeQA from '../components/RealtimeQA';
 import { nodeDataMap } from '@/data/mindmapData';
 import type { NodeContentBlock } from '@/data/mindmapTypes';
 
-type HeaderTab = 'intro' | 'mindmap' | 'chatbox' | 'hiddenbox' | 'casestudy';
+type HeaderTab = 'intro' | 'mindmap' | 'qna' | 'chatbox' | 'hiddenbox' | 'casestudy';
 type ThemeMode = 'light' | 'dark' | 'lgbtq';
 
+const themeOptions: Array<{
+  value: ThemeMode;
+  label: string;
+  Icon: typeof Sun;
+}> = [
+  { value: 'light', label: 'Sáng', Icon: Sun },
+  { value: 'dark', label: 'Tối', Icon: Moon },
+  { value: 'lgbtq', label: 'LGBT', Icon: Sparkles },
+];
+
 export default function Index() {
-  const [theme, setTheme] = useState<ThemeMode>('dark');
+  const [theme, setTheme] = useState<ThemeMode>(() => {
+    if (globalThis.window === undefined) return 'dark';
+    const saved = globalThis.localStorage.getItem('theme-mode');
+    if (saved === 'light' || saved === 'dark' || saved === 'lgbtq') return saved;
+    return 'dark';
+  });
   const [tab, setTab] = useState<HeaderTab>('mindmap');
 
   useEffect(() => {
@@ -19,6 +35,7 @@ export default function Index() {
     el.classList.remove('dark', 'lgbtq');
     if (theme === 'dark') el.classList.add('dark');
     if (theme === 'lgbtq') el.classList.add('lgbtq');
+    globalThis.localStorage.setItem('theme-mode', theme);
   }, [theme]);
 
   const introContent = useMemo(() => nodeDataMap.intro, []);
@@ -48,13 +65,19 @@ export default function Index() {
   const tabLabel: Record<HeaderTab, string> = {
     intro: 'Mở đầu - Giới thiệu',
     mindmap: 'Mindmap',
+    qna: 'Q&A',
     chatbox: 'Chatbox',
     hiddenbox: 'HiddenBox',
     casestudy: 'Casestudy',
   };
 
+  const appClassName = [
+    'h-screen flex flex-col text-foreground',
+    theme === 'lgbtq' ? 'lgbtq-app-bg' : 'bg-background',
+  ].join(' ');
+
   return (
-    <div className="h-screen flex flex-col bg-background text-foreground">
+    <div className={appClassName}>
       <header className="shrink-0 border-b border-border bg-card px-5 py-3 flex items-center gap-4">
         <div className="min-w-[260px]">
           <h1 className="text-sm font-bold text-foreground leading-tight">
@@ -85,21 +108,33 @@ export default function Index() {
           </div>
         </nav>
 
-        <button
-          onClick={() =>
-            setTheme((t) => (t === 'light' ? 'dark' : t === 'dark' ? 'lgbtq' : 'light'))
-          }
-          className="p-2 rounded-lg hover:bg-muted transition-colors"
-          title="Chuyển đổi giao diện (Light/Dark/LGBTQ+)"
-          aria-label="Chuyển đổi giao diện"
-        >
-          {theme === 'light' && <Sun size={16} className="text-muted-foreground" />}
-          {theme === 'dark' && <Moon size={16} className="text-muted-foreground" />}
-          {theme === 'lgbtq' && <Sparkles size={16} className="text-muted-foreground" />}
-        </button>
+        <div className="flex items-center gap-1 rounded-xl border border-border bg-background/40 p-1" aria-label="Chọn giao diện">
+          {themeOptions.map(({ value, label, Icon }) => {
+            const active = theme === value;
+            return (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setTheme(value)}
+                className={[
+                  'inline-flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-lg transition-colors',
+                  active
+                    ? 'bg-card text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                ].join(' ')}
+                title={`Chuyển sang giao diện ${label}`}
+                aria-pressed={active}
+              >
+                <Icon size={14} />
+                {label}
+              </button>
+            );
+          })}
+        </div>
       </header>
 
       {tab === 'mindmap' && <MindmapFlow />}
+      {tab === 'qna' && <RealtimeQA />}
       {tab === 'intro' && (
         <div className="flex-1 overflow-y-auto">
           <div className="max-w-4xl mx-auto px-6 py-8">
@@ -108,7 +143,7 @@ export default function Index() {
               {introContent.detailPages.map((page) => (
                 <section key={page.id} className="rounded-xl border border-border bg-card p-5">
                   <h3 className="text-base font-semibold">{page.title}</h3>
-                  <div className="mt-3 space-y-3">{page.blocks.map(renderIntroBlock)}</div>
+                  <div className="mt-3 space-y-3">{page.blocks.map((block, idx) => renderIntroBlock(block, idx))}</div>
                 </section>
               ))}
             </div>
