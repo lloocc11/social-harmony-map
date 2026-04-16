@@ -18,7 +18,7 @@ export default function MindmapEdge({
   const edgeData = (data ?? {}) as MindmapEdgeData;
   const startColor = edgeData.startColor ?? 'hsl(var(--node-root-bg))';
   const endColor = edgeData.endColor ?? startColor;
-  const gradientId = `mindmap-edge-${id.replaceAll(/[^a-zA-Z0-9_-]/g, '')}`;
+  const gradientId = `mindmap-edge-${id.replace(/[^a-zA-Z0-9_-]/g, '')}`;
 
   const [edgePath] = getBezierPath({
     sourceX,
