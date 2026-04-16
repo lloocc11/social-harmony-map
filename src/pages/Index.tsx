@@ -136,16 +136,28 @@ export default function Index() {
       {tab === 'mindmap' && <MindmapFlow />}
       {tab === 'qna' && <RealtimeQA />}
       {tab === 'intro' && (
-        <div className="flex-1 overflow-y-auto">
-          <div className="max-w-4xl mx-auto px-6 py-8">
-            <h2 className="text-lg font-bold whitespace-pre-line">{introContent.label}</h2>
-            <div className="mt-5 space-y-6">
-              {introContent.detailPages.map((page) => (
-                <section key={page.id} className="rounded-xl border border-border bg-card p-5">
-                  <h3 className="text-base font-semibold">{page.title}</h3>
-                  <div className="mt-3 space-y-3">{page.blocks.map((block, idx) => renderIntroBlock(block, idx))}</div>
-                </section>
-              ))}
+        <div className="flex-1 overflow-y-auto bg-gradient-to-b from-purple-950 via-black to-black intro-animated-bg relative">
+          <div className="min-h-full flex items-center justify-center px-6 py-16">
+            <div className="w-full max-w-4xl mx-auto translate-y-6">
+              <div className="text-center">
+                <h2 className="text-3xl md:text-4xl font-extrabold tracking-tight text-white">
+                  Vấn đề dân tộc và tôn giáo trong thời kỳ quá độ lên CNXH
+                </h2>
+                <p className="mt-4 text-sm md:text-base text-white/75 leading-relaxed">
+                  Phần mở đầu giúp người học xác định trọng tâm kiến thức và cách vận dụng vào thực tiễn xã hội Việt Nam.
+                </p>
+              </div>
+
+              <div className="mt-10 flex justify-center">
+                <div className="w-full max-w-2xl rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6 text-center">
+                  <h3 className="text-xl font-bold text-white">Ba mục tiêu cụ thể</h3>
+                  <div className="mt-5 space-y-2.5 text-base text-white/80 leading-relaxed">
+                    <p>Nắm vững quan điểm cơ bản của chủ nghĩa Mác-Lênin về dân tộc và tôn giáo.</p>
+                    <p>Hiểu chính sách dân tộc, tôn giáo của Đảng và Nhà nước Việt Nam.</p>
+                    <p>Biết vận dụng vào xây dựng khối đại đoàn kết toàn dân tộc.</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
