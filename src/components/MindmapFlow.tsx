@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Presentation } from 'lucide-react';
+import {
   ReactFlow,
   Background,
   Controls,
@@ -14,6 +15,7 @@ import { Presentation } from 'lucide-react';
 import RadialNode from './RadialNode';
 import MindmapEdge from './MindmapEdge';
 import DetailSidebar from './DetailSidebar';
+import PresentationMode from './PresentationMode';
 import { nodeDataMap, allNodeIds, type MindmapNodeData } from '@/data/mindmapData';
 
 const nodeTypes = { radial: RadialNode };
