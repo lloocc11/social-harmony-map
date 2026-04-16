@@ -94,7 +94,7 @@ function normalizeHistory(history: unknown): ChatMessage[] {
         (item as { content?: string }).content !== undefined
     )
     .map((item) => ({
-      role: item.role === "assistant" ? "assistant" : "user",
+      role: item.role === "assistant" ? "assistant" as const : "user" as const,
       content: String(item.content),
     }))
     .slice(-12);
