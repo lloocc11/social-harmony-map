@@ -1,4 +1,6 @@
 import type { MindmapNodeData } from '@/data/mindmapTypes';
+import sec2_2aImg1 from '@/PIC/2.2.1.1.jpg';
+import sec2_2aImg2 from '@/PIC/2.2.1.2.jpg';
 
 export const sec2_2aNode: MindmapNodeData = {
   id: 'sec2_2a',
@@ -14,6 +16,18 @@ export const sec2_2aNode: MindmapNodeData = {
         {
           type: 'text',
           text: 'Việt Nam có 6 đặc điểm tôn giáo nổi bật, phản ánh sự đa dạng tín ngưỡng - tôn giáo, đồng thời đặt ra yêu cầu quản lý nhà nước linh hoạt, tôn trọng tự do tín ngưỡng và giữ vững ổn định xã hội.',
+        },
+        {
+          type: 'image',
+          src: sec2_2aImg1,
+          alt: 'Đặc điểm tôn giáo ở Việt Nam - hình 1',
+          caption: 'Hình minh họa 1 cho nội dung 2.2.1.',
+        },
+        {
+          type: 'image',
+          src: sec2_2aImg2,
+          alt: 'Đặc điểm tôn giáo ở Việt Nam - hình 2',
+          caption: 'Hình minh họa 2 cho nội dung 2.2.1.',
         },
       ],
     },

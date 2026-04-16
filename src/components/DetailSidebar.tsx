@@ -2,11 +2,6 @@ import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import type { MindmapNodeData, NodeCategory, NodeContentBlock } from '@/data/mindmapTypes';
-import sec1_1Img from '@/PIC/1.1.1.jpg';
-import sec1_2Img from '@/PIC/1.2.2.jpg';
-import sec1_3aImg from '@/PIC/1.3.1.jpg';
-import sec2_1aImg from '@/PIC/2.1.1.jpg';
-import sec2_2bImg from '@/PIC/2.2.2.jpg';
 
 const categoryLabels: Record<NodeCategory, string> = {
   root: 'Tổng quan',
@@ -134,18 +129,6 @@ function ContentBlock({ block }: Readonly<{ block: NodeContentBlock }>) {
 
 export default function DetailSidebar({ node, onClose }: Readonly<Props>) {
   const pages = node?.detailPages ?? [];
-  const sideImage =
-    node?.id === 'sec1_1'
-      ? sec1_1Img
-      : node?.id === 'sec1_2'
-        ? sec1_2Img
-        : node?.id === 'sec1_3a'
-          ? sec1_3aImg
-          : node?.id === 'sec2_1a'
-            ? sec2_1aImg
-            : node?.id === 'sec2_2b'
-              ? sec2_2bImg
-          : null;
 
   if (typeof document === 'undefined') {
     return null;
@@ -212,35 +195,20 @@ export default function DetailSidebar({ node, onClose }: Readonly<Props>) {
                 </h2>
               </div>
 
-              <div className={sideImage ? 'flex flex-col md:flex-row gap-5 items-start' : ''}>
-                <div className={sideImage ? 'flex-1 min-w-0 space-y-5' : 'space-y-5'}>
-                  {pages.map((page) => (
-                    <section
-                      key={page.id}
-                      className="rounded-2xl border border-border bg-muted/30 p-5"
-                    >
-                      <h3 className="text-sm font-semibold text-foreground">{page.title}</h3>
-                      <div className="mt-3 space-y-3">
-                        {page.blocks.map((block, index) => (
-                          <ContentBlock key={`${page.id}-${index}`} block={block} />
-                        ))}
-                      </div>
-                    </section>
-                  ))}
-                </div>
-
-                {sideImage && (
-                  <aside className="w-full md:w-[320px] lg:w-[360px] shrink-0 md:sticky md:top-4">
-                    <div className="rounded-2xl overflow-hidden border border-border bg-card">
-                      <img
-                        src={sideImage}
-                        alt="Hình minh hoạ"
-                        className="w-full h-auto block"
-                        loading="lazy"
-                      />
+              <div className="space-y-5">
+                {pages.map((page) => (
+                  <section
+                    key={page.id}
+                    className="rounded-2xl border border-border bg-muted/30 p-5"
+                  >
+                    <h3 className="text-sm font-semibold text-foreground">{page.title}</h3>
+                    <div className="mt-3 space-y-3">
+                      {page.blocks.map((block, index) => (
+                        <ContentBlock key={`${page.id}-${index}`} block={block} />
+                      ))}
                     </div>
-                  </aside>
-                )}
+                  </section>
+                ))}
               </div>
             </div>
             </motion.div>

@@ -1,4 +1,5 @@
 import type { MindmapNodeData } from '@/data/mindmapTypes';
+import sec1_1Img from '@/PIC/1.1.1.jpg';
 
 export const sec1_1Node: MindmapNodeData = {
   id: 'sec1_1',
@@ -15,6 +16,12 @@ export const sec1_1Node: MindmapNodeData = {
           type: 'text',
           text: `Theo quan điểm của chủ nghĩa Mác - Lênin, dân tộc là quá trình phát triển lâu dài của xã hội loài người, trải qua các hình thức cộng đồng từ thấp đến cao, bao gồm: thị tộc, bộ lạc, bộ tộc, rồi đến dân tộc.
 Sự biến đổi của phương thức sản xuất chính là nguyên nhân quyết định sự biến đổi của cộng đồng dân tộc.`,
+        },
+        {
+          type: 'image',
+          src: sec1_1Img,
+          alt: 'Khái niệm và đặc trưng dân tộc',
+          caption: 'Hình minh họa cho nội dung 1.1.',
         },
       ],
     },

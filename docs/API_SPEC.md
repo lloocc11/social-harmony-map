@@ -53,6 +53,7 @@ interface NodeContentPage {
 ### Rules
 - `id` unique trong pham vi 1 node.
 - `blocks` render theo dung thu tu khai bao.
+- Anh minh hoa nen duoc dat truc tiep trong `blocks` voi `type: 'image'` thay vi map cứng theo `node.id` trong UI.
 
 ## Type: NodeContentBlock
 
@@ -104,7 +105,18 @@ interface NodeInteractionConfig {
 - `parentId` ton tai trong graph.
 - `children` tham chieu node ton tai.
 - `startPageId` ton tai trong `detailPages`.
-- Media path local phai nam trong `public/` neu dung duong dan `/...`.
+- Media path local ho tro 2 cach:
+  - Import truc tiep tu `src/PIC/*` trong file node va gan vao `block.src`.
+  - Hoac dung duong dan `/...` tro toi tai nguyen trong `public/`.
+
+## Node image mapping
+- Cac anh trong `src/PIC` da duoc nhung vao node du lieu qua `NodeContentBlock` loai `image`:
+  - `1.1.1.jpg` -> node `sec1_1`
+  - `1.2.2.jpg` -> node `sec1_2`
+  - `1.3.1.jpg` -> node `sec1_3a`
+  - `2.1.1.jpg` -> node `sec2_1a`
+  - `2.2.1.1.jpg`, `2.2.1.2.jpg` -> node `sec2_2a`
+  - `2.2.2.jpg` -> node `sec2_2b`
 
 ## Content paging note
 - Muc noi dung ly thuyet dai nen tach thanh nhieu `detailPages` theo logic bai hoc.
@@ -122,6 +134,10 @@ interface NodeInteractionConfig {
 - Giao dien ho tro 3 che do theme: `light`, `dark`, `lgbtq`.
 - Theme duoc luu vao localStorage key `theme-mode` de giu lua chon sau khi reload trang.
 - O che do `lgbtq`, nen cau vong duoc ap truc tiep len app container (`lgbtq-app-bg`) va cac layer nen cua React Flow duoc de trong suot de mau nen hien thi dung.
+
+## Presentation mode note
+- Khi bat presentation content panel, sidebar noi dung truot tu phai sang trai va chiem `40vw` (40% viewport width).
+- Thanh dieu khien ben duoi tu dong canh trai phan con lai cua man hinh bang cach offset `right: 40vw` khi sidebar dang hien.
 
 ## Realtime Q&A note
 - Da bo sung component `RealtimeQA` voi che do hoi-dap realtime, khong can auth.

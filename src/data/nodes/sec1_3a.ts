@@ -1,4 +1,5 @@
 import type { MindmapNodeData } from '@/data/mindmapTypes';
+import sec1_3aImg from '@/PIC/1.3.1.jpg';
 
 export const sec1_3aNode: MindmapNodeData = {
   id: 'sec1_3a',
@@ -14,6 +15,12 @@ export const sec1_3aNode: MindmapNodeData = {
         {
           type: 'text',
           text: 'Việt Nam là một quốc gia đa tộc người với 54 dân tộc anh em. Bức tranh dân tộc Việt Nam có 6 đặc điểm nổi bật, vừa thể hiện tính đa dạng, vừa tạo nền tảng cho khối đại đoàn kết toàn dân tộc.',
+        },
+        {
+          type: 'image',
+          src: sec1_3aImg,
+          alt: 'Đặc điểm dân tộc Việt Nam',
+          caption: 'Hình minh họa cho nội dung đặc điểm dân tộc Việt Nam.',
         },
       ],
     },

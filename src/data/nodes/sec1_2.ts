@@ -1,4 +1,5 @@
 import type { MindmapNodeData } from '@/data/mindmapTypes';
+import sec1_2Img from '@/PIC/1.2.2.jpg';
 
 export const sec1_2Node: MindmapNodeData = {
   id: 'sec1_2',
@@ -15,6 +16,12 @@ export const sec1_2Node: MindmapNodeData = {
         {
           type: 'text',
           text: 'Nội dung cốt lõi của phần này gồm hai vấn đề: Hai xu hướng khách quan của sự phát triển quan hệ dân tộc và Cương lĩnh dân tộc của chủ nghĩa Mác - Lênin.',
+        },
+        {
+          type: 'image',
+          src: sec1_2Img,
+          alt: 'Sơ đồ nội dung chủ nghĩa Mác - Lênin về vấn đề dân tộc',
+          caption: 'Hình minh họa cho nội dung 1.2.',
         },
       ],
     },

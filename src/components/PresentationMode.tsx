@@ -190,6 +190,7 @@ function NodeContentPanel({ node, pageIndex, onPageChange }: { node: MindmapNode
 export default function PresentationMode({ active, onClose, onExpandNode }: PresentationModeProps) {
   const { fitView } = useReactFlow();
   const steps = useMemo(() => buildPresentationSteps(), []);
+  const contentPanelWidth = '40vw';
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showContent, setShowContent] = useState(true);
@@ -286,7 +287,7 @@ export default function PresentationMode({ active, onClose, onExpandNode }: Pres
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: '100%', opacity: 0 }}
             transition={{ type: 'spring', damping: 26, stiffness: 260 }}
-            className="absolute top-0 right-0 h-full w-[380px] max-w-[45vw] z-20 bg-card/95 backdrop-blur-md border-l border-border shadow-2xl"
+            className="absolute top-0 right-0 h-full w-[40vw] z-20 bg-card/95 backdrop-blur-md border-l border-border shadow-2xl"
           >
             <NodeContentPanel
               node={step.node}
@@ -298,7 +299,7 @@ export default function PresentationMode({ active, onClose, onExpandNode }: Pres
       </AnimatePresence>
 
       {/* Bottom controls */}
-      <div className="absolute bottom-0 left-0 right-0 z-20" style={{ right: showContent ? 380 : 0 }}>
+      <div className="absolute bottom-0 left-0 right-0 z-20" style={{ right: showContent ? contentPanelWidth : 0 }}>
         <div className="flex justify-center mb-3">
           <div className="bg-card/95 backdrop-blur-md border border-border rounded-xl px-5 py-3 shadow-xl max-w-lg">
             <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">

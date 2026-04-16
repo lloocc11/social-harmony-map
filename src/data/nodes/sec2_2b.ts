@@ -1,4 +1,5 @@
 import type { MindmapNodeData } from '@/data/mindmapTypes';
+import sec2_2bImg from '@/PIC/2.2.2.jpg';
 
 export const sec2_2bNode: MindmapNodeData = {
   id: 'sec2_2b',
@@ -14,6 +15,12 @@ export const sec2_2bNode: MindmapNodeData = {
         {
           type: 'text',
           text: 'Chính sách tôn giáo của Đảng và Nhà nước là nhất quán, khoa học và nhân văn; được triển khai qua 5 nội dung cơ bản nhằm bảo đảm tự do tín ngưỡng, củng cố đại đoàn kết dân tộc và giữ vững ổn định xã hội.',
+        },
+        {
+          type: 'image',
+          src: sec2_2bImg,
+          alt: 'Chính sách tôn giáo của Đảng và Nhà nước',
+          caption: 'Hình minh họa cho nội dung 2.2.2.',
         },
       ],
     },

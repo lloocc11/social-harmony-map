@@ -1,4 +1,5 @@
 import type { MindmapNodeData } from '@/data/mindmapTypes';
+import sec2_1aImg from '@/PIC/2.1.1.jpg';
 
 export const sec2_1aNode: MindmapNodeData = {
   id: 'sec2_1a',
@@ -14,6 +15,12 @@ export const sec2_1aNode: MindmapNodeData = {
         {
           type: 'text',
           text: 'Theo chủ nghĩa Mác - Lênin, tôn giáo là hiện tượng xã hội - văn hóa do con người sáng tạo ra. Việc nhận thức đúng bản chất, nguồn gốc và tính chất của tôn giáo là cơ sở để giải quyết đúng đắn vấn đề tôn giáo trong thực tiễn.',
+        },
+        {
+          type: 'image',
+          src: sec2_1aImg,
+          alt: 'Bản chất và nguồn gốc tôn giáo',
+          caption: 'Hình minh họa cho nội dung 2.1.1.',
         },
       ],
     },
