@@ -14,7 +14,7 @@ export function buildDefaultDeck(): TileContent[] {
     questionId: `q${i + 1}`,
   }));
 
-  const bonusTiles: TileContent[] = Array.from({ length: 3 }, (_, i) => ({
+  const bonusTiles: TileContent[] = Array.from({ length: 2 }, (_, i) => ({
     kind: 'bonus',
     id: `bonus-${i + 1}`,
     points: 200,
@@ -22,12 +22,12 @@ export function buildDefaultDeck(): TileContent[] {
     description: 'Bạn nhận thêm 200 điểm cho lượt này.',
   }));
 
-  const bombTiles: TileContent[] = Array.from({ length: 3 }, (_, i) => ({
+  const bombTiles: TileContent[] = Array.from({ length: 4 }, (_, i) => ({
     kind: 'bomb',
     id: `bomb-${i + 1}`,
     points: -100,
     title: 'Ô ném bom',
-    description: 'Bạn bị trừ 100 điểm cho lượt này.',
+    description: '1 nhóm nào đó bị trừ 100 điểm cho lượt này.',
   }));
 
   return [...questionTiles, ...bonusTiles, ...bombTiles];

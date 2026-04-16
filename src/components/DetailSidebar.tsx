@@ -1,8 +1,12 @@
-import { useEffect, useMemo, useState } from 'react';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { createPortal } from 'react-dom';
 import type { MindmapNodeData, NodeCategory, NodeContentBlock } from '@/data/mindmapTypes';
+import sec1_1Img from '@/PIC/1.1.1.jpg';
+import sec1_2Img from '@/PIC/1.2.2.jpg';
+import sec1_3aImg from '@/PIC/1.3.1.jpg';
+import sec2_1aImg from '@/PIC/2.1.1.jpg';
+import sec2_2bImg from '@/PIC/2.2.2.jpg';
 
 const categoryLabels: Record<NodeCategory, string> = {
   root: 'Tổng quan',
@@ -130,19 +134,18 @@ function ContentBlock({ block }: Readonly<{ block: NodeContentBlock }>) {
 
 export default function DetailSidebar({ node, onClose }: Readonly<Props>) {
   const pages = node?.detailPages ?? [];
-  const [pageIndex, setPageIndex] = useState(0);
-
-  useEffect(() => {
-    if (!node) return;
-
-    const startIndex = node.interaction?.startPageId
-      ? pages.findIndex((page) => page.id === node.interaction?.startPageId)
-      : 0;
-
-    setPageIndex(Math.max(0, startIndex));
-  }, [node, pages]);
-
-  const page = useMemo(() => pages[pageIndex], [pages, pageIndex]);
+  const sideImage =
+    node?.id === 'sec1_1'
+      ? sec1_1Img
+      : node?.id === 'sec1_2'
+        ? sec1_2Img
+        : node?.id === 'sec1_3a'
+          ? sec1_3aImg
+          : node?.id === 'sec2_1a'
+            ? sec2_1aImg
+            : node?.id === 'sec2_2b'
+              ? sec2_2bImg
+          : null;
 
   if (typeof document === 'undefined') {
     return null;
@@ -209,44 +212,37 @@ export default function DetailSidebar({ node, onClose }: Readonly<Props>) {
                 </h2>
               </div>
 
-              {page && (
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-semibold text-foreground">{page.title}</h3>
-                    <span className="text-xs text-muted-foreground">
-                      {pageIndex + 1}/{pages.length}
-                    </span>
-                  </div>
-
-                  {page.blocks.map((block, index) => (
-                    <ContentBlock key={`${page.id}-${index}`} block={block} />
+              <div className={sideImage ? 'flex flex-col md:flex-row gap-5 items-start' : ''}>
+                <div className={sideImage ? 'flex-1 min-w-0 space-y-5' : 'space-y-5'}>
+                  {pages.map((page) => (
+                    <section
+                      key={page.id}
+                      className="rounded-2xl border border-border bg-muted/30 p-5"
+                    >
+                      <h3 className="text-sm font-semibold text-foreground">{page.title}</h3>
+                      <div className="mt-3 space-y-3">
+                        {page.blocks.map((block, index) => (
+                          <ContentBlock key={`${page.id}-${index}`} block={block} />
+                        ))}
+                      </div>
+                    </section>
                   ))}
                 </div>
-              )}
-            </div>
 
-            {pages.length > 1 && (
-              <div className="shrink-0 flex items-center justify-between px-5 py-3 border-t border-border bg-card/80 backdrop-blur">
-                <button
-                  type="button"
-                  onClick={() => setPageIndex((prev) => Math.max(0, prev - 1))}
-                  disabled={pageIndex === 0}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border text-xs font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-muted transition-colors"
-                >
-                  <ChevronLeft size={14} />
-                  Trang trước
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPageIndex((prev) => Math.min(pages.length - 1, prev + 1))}
-                  disabled={pageIndex === pages.length - 1}
-                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border text-xs font-medium disabled:opacity-40 disabled:cursor-not-allowed hover:bg-muted transition-colors"
-                >
-                  Trang sau
-                  <ChevronRight size={14} />
-                </button>
+                {sideImage && (
+                  <aside className="w-full md:w-[320px] lg:w-[360px] shrink-0 md:sticky md:top-4">
+                    <div className="rounded-2xl overflow-hidden border border-border bg-card">
+                      <img
+                        src={sideImage}
+                        alt="Hình minh hoạ"
+                        className="w-full h-auto block"
+                        loading="lazy"
+                      />
+                    </div>
+                  </aside>
+                )}
               </div>
-            )}
+            </div>
             </motion.div>
           </div>
         </>
