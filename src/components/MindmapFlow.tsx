@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { Presentation } from 'lucide-react';
 import {
   ReactFlow,
   Background,
@@ -14,6 +15,7 @@ import {
 import RadialNode from './RadialNode';
 import MindmapEdge from './MindmapEdge';
 import DetailSidebar from './DetailSidebar';
+import PresentationMode from './PresentationMode';
 import { nodeDataMap, allNodeIds, type MindmapNodeData } from '@/data/mindmapData';
 
 const nodeTypes = { radial: RadialNode };
@@ -172,6 +174,7 @@ function buildRadialLayout(collapsed: Set<string>) {
 function MindmapInner() {
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const [selectedNode, setSelectedNode] = useState<MindmapNodeData | null>(null);
+  const [presentationActive, setPresentationActive] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { fitView } = useReactFlow();
@@ -184,8 +187,16 @@ function MindmapInner() {
     });
   }, []);
 
+  const expandNode = useCallback((id: string) => {
+    setCollapsed((prev) => {
+      if (!prev.has(id)) return prev;
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+  }, []);
+
   const openNodeDetails = useCallback((id: string) => {
-    // DetailSidebar handles both sidebar and popup modes based on node.interaction.mode.
     setSelectedNode(nodeDataMap[id] || null);
   }, []);
 
@@ -214,6 +225,15 @@ function MindmapInner() {
     setTimeout(() => fitView({ padding: 0.15, duration: 500 }), 100);
   }, [fitView]);
 
+  const startPresentation = useCallback(() => {
+    // Collapse all branches first, then activate presentation
+    const ids = allNodeIds.filter((id) => (nodeDataMap[id]?.children?.length ?? 0) > 0);
+    setCollapsed(new Set(ids));
+    setPresentationActive(true);
+  }, []);
+
+  const btnClass = 'px-3 py-1.5 text-xs font-medium rounded-lg bg-card text-foreground border border-border shadow-sm hover:bg-muted transition-all';
+
   return (
     <div className="flex-1 relative">
       <ReactFlow
@@ -238,16 +258,22 @@ function MindmapInner() {
       </ReactFlow>
 
       <div className="absolute top-4 right-4 flex gap-2 z-10">
-        <button onClick={resetView} className="px-3 py-1.5 text-xs font-medium rounded-lg bg-card text-foreground border border-border shadow-sm hover:bg-muted transition-all">
-          Reset View
+        <button onClick={startPresentation} className={`${btnClass} !bg-primary !text-primary-foreground !border-primary hover:!bg-primary/90`}>
+          <span className="inline-flex items-center gap-1.5">
+            <Presentation size={14} />
+            Trình chiếu
+          </span>
         </button>
-        <button onClick={expandAll} className="px-3 py-1.5 text-xs font-medium rounded-lg bg-card text-foreground border border-border shadow-sm hover:bg-muted transition-all">
-          Mở rộng
-        </button>
-        <button onClick={collapseAll} className="px-3 py-1.5 text-xs font-medium rounded-lg bg-card text-foreground border border-border shadow-sm hover:bg-muted transition-all">
-          Thu gọn
-        </button>
+        <button onClick={resetView} className={btnClass}>Reset View</button>
+        <button onClick={expandAll} className={btnClass}>Mở rộng</button>
+        <button onClick={collapseAll} className={btnClass}>Thu gọn</button>
       </div>
+
+      <PresentationMode
+        active={presentationActive}
+        onClose={() => setPresentationActive(false)}
+        onExpandNode={expandNode}
+      />
 
       <DetailSidebar node={selectedNode} onClose={() => setSelectedNode(null)} />
     </div>

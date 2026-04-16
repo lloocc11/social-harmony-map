@@ -121,7 +121,7 @@ const RadialNode = memo(({ data }: NodeProps) => {
       type="button"
       style={circleStyle}
       className="group"
-      aria-label={d.label.replaceAll('\n', ' ')}
+      aria-label={d.label.replace(/\n/g, ' ')}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={d.onClick}

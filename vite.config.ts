@@ -50,7 +50,7 @@ NGUYÊN TẮC BẮT BUỘC KHI TRẢ LỜI:
 8. Tôn trọng các tư tưởng, giá trị văn hóa và nền tảng chính trị của Việt Nam; tránh diễn giải thiên lệch, kích động hoặc phủ định cực đoan.`;
 
 function sendJson(
-  res: Parameters<Plugin["configureServer"]>[0]["middlewares"]["use"] extends (...args: any[]) => any ? any : never,
+  res: any,
   statusCode: number,
   payload: unknown
 ) {
@@ -94,7 +94,7 @@ function normalizeHistory(history: unknown): ChatMessage[] {
         (item as { content?: string }).content !== undefined
     )
     .map((item) => ({
-      role: item.role === "assistant" ? "assistant" : "user",
+      role: item.role === "assistant" ? "assistant" as const : "user" as const,
       content: String(item.content),
     }))
     .slice(-12);
@@ -156,7 +156,7 @@ function openAIMiniApiPlugin(openAIKey: string | undefined): Plugin {
             return;
           }
 
-          const payloadMessages = [
+          const payloadMessages: Array<{ role: string; content: string }> = [
             {
               role: "system",
               content: SYSTEM_PROMPT,
