@@ -139,6 +139,12 @@ interface NodeInteractionConfig {
 - Khi bat presentation content panel, sidebar noi dung truot tu phai sang trai va chiem `40vw` (40% viewport width).
 - Thanh dieu khien ben duoi tu dong canh trai phan con lai cua man hinh bang cach offset `right: 40vw` khi sidebar dang hien.
 
+## Favicon note
+- Tab icon duoc khai bao trong `index.html`:
+  - `rel="icon"` tro toi `/favicon.svg`
+  - `rel="shortcut icon"` fallback toi `/favicon.ico`
+- Icon chinh hien tai nam tai `public/favicon.svg`.
+
 ## Realtime Q&A note
 - Da bo sung component `RealtimeQA` voi che do hoi-dap realtime, khong can auth.
 - Tab moi `Q&A` duoc them vao trang chinh de nguoi dung dat cau hoi va tra loi truc tiep.
