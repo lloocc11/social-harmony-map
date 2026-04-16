@@ -18,7 +18,7 @@ const themeOptions: Array<{
 }> = [
   { value: 'light', label: 'Sáng', Icon: Sun },
   { value: 'dark', label: 'Tối', Icon: Moon },
-  { value: 'lgbtq', label: 'LGBT', Icon: Sparkles },
+  { value: 'lgbtq', label: 'Colorful', Icon: Sparkles },
 ];
 
 export default function Index() {
