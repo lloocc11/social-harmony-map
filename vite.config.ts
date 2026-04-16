@@ -156,7 +156,7 @@ function openAIMiniApiPlugin(openAIKey: string | undefined): Plugin {
             return;
           }
 
-          const payloadMessages = [
+          const payloadMessages: Array<{ role: string; content: string }> = [
             {
               role: "system",
               content: SYSTEM_PROMPT,
