@@ -129,6 +129,8 @@ interface NodeInteractionConfig {
 
 ## Node rendering note
 - Node renderer dang ap dung kich thuoc lon hon theo level va co co che font/adaptive line-height cho nhan dai, giup han che tran chu ra ngoai hinh tron.
+- Da tang them kich thuoc node va typography (label tren node + noi dung popup) de de doc hon khi thuyet trinh tren man hinh lon.
+- Co nut `Font +` tren toolbar mindmap de bat/tat runtime text boost cho ca node labels va popup content (khong can reload trang).
 
 ## UI theme note
 - Giao dien ho tro 3 che do theme: `light`, `dark`, `lgbtq`.
@@ -138,6 +140,7 @@ interface NodeInteractionConfig {
 ## Presentation mode note
 - Khi bat presentation content panel, sidebar noi dung truot tu phai sang trai va chiem `40vw` (40% viewport width).
 - Thanh dieu khien ben duoi tu dong canh trai phan con lai cua man hinh bang cach offset `right: 40vw` khi sidebar dang hien.
+- Nut `Font +` tren toolbar duoc ap dung cho ca presentation mode: panel noi dung, tieu de, phan trang va thong tin buoc o thanh dieu khien deu tang theo he so font runtime.
 
 ## Favicon note
 - Tab icon duoc khai bao trong `index.html`:
@@ -191,7 +194,7 @@ interface NodeInteractionConfig {
   - `insight: { rule?: string, tags?: string[], lesson?: string } | null`
 - Chat UI rendering:
   - Noi dung `message` duoc giu nguyen xuong dong (`whitespace-pre-wrap`).
-  - Neu co block \`\`\`insight ... \`\`\` thi hien thi thanh khung `pre` rieng de tranh vo format.
+  - Neu co block \`\`\`insight ... \`\`\` thi block nay duoc tach va an khoi giao dien chat, chi giu lai noi dung tra loi chinh de hien thi.
 
 ### OpenAI key
 - `OPENAI_API_KEY` (recommended)

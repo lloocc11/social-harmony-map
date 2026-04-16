@@ -11,6 +11,7 @@ export interface RadialNodeData {
   onToggle: () => void;
   onClick: () => void;
   size: number;
+  fontScale: number;
 }
 
 const categoryVars: Record<NodeCategory, { bg: string; fg: string }> = {
@@ -28,10 +29,10 @@ function getNodePadding(level: number) {
 }
 
 function getFontSize(level: number) {
-  if (level === 0) return 14;
-  if (level === 1) return 12;
-  if (level === 2) return 11;
-  return 10;
+  if (level === 0) return 16;
+  if (level === 1) return 14;
+  if (level === 2) return 12;
+  return 11;
 }
 
 function getFontWeight(level: number) {
@@ -42,22 +43,26 @@ function getFontWeight(level: number) {
 
 function getAdaptiveFontSize(label: string, level: number) {
   const base = getFontSize(level);
-  const compact = label.replace(/\s+/g, ' ').trim();
+  const compact = label.replaceAll('\n', ' ').replaceAll('  ', ' ').trim();
   const lineCount = label.split('\n').length;
   const length = compact.length;
 
   if (level >= 2) {
-    if (lineCount >= 7 || length > 66) return Math.max(8.1, base - 2.1);
-    if (lineCount >= 6 || length > 54) return Math.max(8.6, base - 1.6);
-    if (lineCount >= 5 || length > 42) return Math.max(9.1, base - 1.1);
+    if (lineCount >= 7 || length > 66) return Math.max(9.8, base - 2);
+    if (lineCount >= 6 || length > 54) return Math.max(10.2, base - 1.6);
+    if (lineCount >= 5 || length > 42) return Math.max(10.8, base - 1.1);
   }
 
   if (level === 1) {
-    if (lineCount >= 5 || length > 42) return Math.max(9.2, base - 1.6);
-    if (lineCount >= 4 || length > 34) return Math.max(10, base - 1);
+    if (lineCount >= 5 || length > 42) return Math.max(11, base - 1.4);
+    if (lineCount >= 4 || length > 34) return Math.max(11.8, base - 0.8);
   }
 
   return base;
+}
+
+function scaleFont(value: number, fontScale: number) {
+  return Number((value * fontScale).toFixed(2));
 }
 
 function getAdaptiveLineHeight(level: number, lineCount: number) {
@@ -112,7 +117,7 @@ const RadialNode = memo(({ data }: NodeProps) => {
   };
 
   const lineCount = d.label.split('\n').length;
-  const fontSize = getAdaptiveFontSize(d.label, d.level);
+  const fontSize = scaleFont(getAdaptiveFontSize(d.label, d.level), d.fontScale ?? 1);
   const fontWeight = getFontWeight(d.level);
   const lineHeight = getAdaptiveLineHeight(d.level, lineCount);
 
@@ -121,7 +126,7 @@ const RadialNode = memo(({ data }: NodeProps) => {
       type="button"
       style={circleStyle}
       className="group"
-      aria-label={d.label.replace(/\n/g, ' ')}
+      aria-label={d.label.replaceAll('\n', ' ')}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={d.onClick}
@@ -170,7 +175,7 @@ const RadialNode = memo(({ data }: NodeProps) => {
         {d.hasChildren && (
           <span
             className="mt-1 opacity-60 group-hover:opacity-100 transition-opacity"
-            style={{ fontSize: 9 }}
+            style={{ fontSize: scaleFont(9, d.fontScale ?? 1) }}
             title={d.collapsed ? 'Mở rộng nhánh' : 'Thu gọn nhánh'}
           >
             {d.collapsed ? '＋' : '−'}

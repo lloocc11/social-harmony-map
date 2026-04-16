@@ -9,6 +9,7 @@ interface PresentationModeProps {
   active: boolean;
   onClose: () => void;
   onExpandNode: (id: string) => void;
+  presentationTextBoost?: boolean;
 }
 
 const categoryColors: Record<NodeCategory, string> = {
@@ -70,13 +71,23 @@ function buildPresentationSteps(): PresentationStep[] {
   return steps;
 }
 
-function ContentBlock({ block }: { block: NodeContentBlock }) {
+function getStepIndicatorClass(index: number, currentStep: number): string {
+  if (index === currentStep) return 'bg-primary scale-125 ring-2 ring-primary/30';
+  if (index < currentStep) return 'bg-primary/50';
+  return 'bg-muted-foreground/30';
+}
+
+function ContentBlock({ block, fontScale }: Readonly<{ block: NodeContentBlock; fontScale: number }>) {
   if (block.type === 'text') {
-    return <p className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line">{block.text}</p>;
+    return (
+      <p className="text-foreground/80 leading-relaxed whitespace-pre-line" style={{ fontSize: `${0.95 * fontScale}rem` }}>
+        {block.text}
+      </p>
+    );
   }
   if (block.type === 'list') {
     return (
-      <ul className="list-disc pl-5 space-y-1.5 text-sm text-foreground/85 leading-relaxed">
+      <ul className="list-disc pl-5 space-y-1.5 text-foreground/85 leading-relaxed" style={{ fontSize: `${0.95 * fontScale}rem` }}>
         {block.items.map((item) => (
           <li key={item}>{item}</li>
         ))}
@@ -87,7 +98,7 @@ function ContentBlock({ block }: { block: NodeContentBlock }) {
     return (
       <figure className="space-y-1">
         <img src={block.src} alt={block.alt} className="w-full rounded-lg border border-border object-cover" />
-        {block.caption && <figcaption className="text-xs text-muted-foreground">{block.caption}</figcaption>}
+        {block.caption && <figcaption className="text-muted-foreground" style={{ fontSize: `${0.8 * fontScale}rem` }}>{block.caption}</figcaption>}
       </figure>
     );
   }
@@ -104,20 +115,30 @@ function ContentBlock({ block }: { block: NodeContentBlock }) {
         >
           <track kind="captions" src="data:text/vtt;charset=utf-8,WEBVTT" srcLang="vi" label="Vietnamese" default />
         </video>
-        {block.caption && <figcaption className="text-xs text-muted-foreground">{block.caption}</figcaption>}
+        {block.caption && <figcaption className="text-muted-foreground" style={{ fontSize: `${0.8 * fontScale}rem` }}>{block.caption}</figcaption>}
       </figure>
     );
   }
   return null;
 }
 
-function NodeContentPanel({ node, pageIndex, onPageChange }: { node: MindmapNodeData; pageIndex: number; onPageChange: (i: number) => void }) {
+function NodeContentPanel({
+  node,
+  pageIndex,
+  onPageChange,
+  fontScale,
+}: Readonly<{
+  node: MindmapNodeData;
+  pageIndex: number;
+  onPageChange: (i: number) => void;
+  fontScale: number;
+}>) {
   const pages = node.detailPages;
   const page: NodeContentPage | undefined = pages[pageIndex];
 
   if (!pages.length) {
     return (
-      <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
+      <div className="flex items-center justify-center h-full text-muted-foreground" style={{ fontSize: `${0.95 * fontScale}rem` }}>
         <p>Chưa có nội dung chi tiết cho mục này.</p>
       </div>
     );
@@ -129,11 +150,11 @@ function NodeContentPanel({ node, pageIndex, onPageChange }: { node: MindmapNode
       <div className="shrink-0 px-5 py-4 border-b border-border">
         <div className="flex items-center gap-2 mb-2">
           <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: categoryColors[node.category] }} />
-          <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+          <span className="font-semibold uppercase tracking-widest text-muted-foreground" style={{ fontSize: `${0.74 * fontScale}rem` }}>
             {categoryLabels[node.category]}
           </span>
         </div>
-        <h2 className="text-base font-bold text-foreground leading-snug whitespace-pre-line" style={{ borderLeft: `3px solid ${categoryColors[node.category]}`, paddingLeft: 12 }}>
+        <h2 className="font-bold text-foreground leading-snug whitespace-pre-line" style={{ borderLeft: `3px solid ${categoryColors[node.category]}`, paddingLeft: 12, fontSize: `${1.05 * fontScale}rem` }}>
           {node.label}
         </h2>
       </div>
@@ -151,13 +172,13 @@ function NodeContentPanel({ node, pageIndex, onPageChange }: { node: MindmapNode
               className="space-y-4"
             >
               <div className="flex items-center justify-between">
-                <h3 className="text-sm font-semibold text-foreground">{page.title}</h3>
+                <h3 className="font-semibold text-foreground" style={{ fontSize: `${0.95 * fontScale}rem` }}>{page.title}</h3>
                 {pages.length > 1 && (
-                  <span className="text-xs text-muted-foreground">{pageIndex + 1}/{pages.length}</span>
+                  <span className="text-muted-foreground" style={{ fontSize: `${0.74 * fontScale}rem` }}>{pageIndex + 1}/{pages.length}</span>
                 )}
               </div>
               {page.blocks.map((block, idx) => (
-                <ContentBlock key={`${page.id}-${idx}`} block={block} />
+                <ContentBlock key={`${page.id}-${idx}`} block={block} fontScale={fontScale} />
               ))}
             </motion.div>
           </AnimatePresence>
@@ -170,14 +191,16 @@ function NodeContentPanel({ node, pageIndex, onPageChange }: { node: MindmapNode
           <button
             onClick={() => onPageChange(Math.max(0, pageIndex - 1))}
             disabled={pageIndex === 0}
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border text-xs font-medium disabled:opacity-30 hover:bg-muted transition-colors"
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border font-medium disabled:opacity-30 hover:bg-muted transition-colors"
+            style={{ fontSize: `${0.74 * fontScale}rem` }}
           >
             <ChevronLeft size={14} /> Trang trước
           </button>
           <button
             onClick={() => onPageChange(Math.min(pages.length - 1, pageIndex + 1))}
             disabled={pageIndex === pages.length - 1}
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border text-xs font-medium disabled:opacity-30 hover:bg-muted transition-colors"
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-border font-medium disabled:opacity-30 hover:bg-muted transition-colors"
+            style={{ fontSize: `${0.74 * fontScale}rem` }}
           >
             Trang sau <ChevronRight size={14} />
           </button>
@@ -187,10 +210,11 @@ function NodeContentPanel({ node, pageIndex, onPageChange }: { node: MindmapNode
   );
 }
 
-export default function PresentationMode({ active, onClose, onExpandNode }: PresentationModeProps) {
+export default function PresentationMode({ active, onClose, onExpandNode, presentationTextBoost = false }: Readonly<PresentationModeProps>) {
   const { fitView } = useReactFlow();
   const steps = useMemo(() => buildPresentationSteps(), []);
   const contentPanelWidth = '40vw';
+  const fontScale = presentationTextBoost ? 1.18 : 1;
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [showContent, setShowContent] = useState(true);
@@ -260,8 +284,8 @@ export default function PresentationMode({ active, onClose, onExpandNode }: Pres
       if (e.key === 'Escape') { onClose(); }
       if (e.key === 'c' || e.key === 'C') { setShowContent((v) => !v); }
     };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
+    globalThis.addEventListener('keydown', handler);
+    return () => globalThis.removeEventListener('keydown', handler);
   }, [active, next, prev, onClose]);
 
   useEffect(() => {
@@ -293,6 +317,7 @@ export default function PresentationMode({ active, onClose, onExpandNode }: Pres
               node={step.node}
               pageIndex={pageIndex}
               onPageChange={setPageIndex}
+              fontScale={fontScale}
             />
           </motion.div>
         )}
@@ -302,15 +327,15 @@ export default function PresentationMode({ active, onClose, onExpandNode }: Pres
       <div className="absolute bottom-0 left-0 right-0 z-20" style={{ right: showContent ? contentPanelWidth : 0 }}>
         <div className="flex justify-center mb-3">
           <div className="bg-card/95 backdrop-blur-md border border-border rounded-xl px-5 py-3 shadow-xl max-w-lg">
-            <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+            <div className="flex items-center gap-2 text-muted-foreground mb-1" style={{ fontSize: `${0.74 * fontScale}rem` }}>
               <ChevronRight size={12} />
               <span>Bước {currentStep + 1} / {steps.length}</span>
               {step?.node.detailPages.length > 1 && showContent && (
                 <span className="text-muted-foreground/60">• Trang {pageIndex + 1}/{step.node.detailPages.length}</span>
               )}
             </div>
-            <p className="text-sm font-semibold text-foreground leading-snug">
-              {step?.node.label.replace(/\n/g, ' ')}
+            <p className="font-semibold text-foreground leading-snug" style={{ fontSize: `${0.95 * fontScale}rem` }}>
+              {step?.node.label.replaceAll('\n', ' ')}
             </p>
           </div>
         </div>
@@ -328,10 +353,9 @@ export default function PresentationMode({ active, onClose, onExpandNode }: Pres
                   onClick={() => goToStep(i)}
                   className={[
                     'w-2.5 h-2.5 rounded-full shrink-0 transition-all duration-300',
-                    i === currentStep ? 'bg-primary scale-125 ring-2 ring-primary/30'
-                      : i < currentStep ? 'bg-primary/50' : 'bg-muted-foreground/30',
+                    getStepIndicatorClass(i, currentStep),
                   ].join(' ')}
-                  title={s.node.label.replace(/\n/g, ' ')}
+                  title={s.node.label.replaceAll('\n', ' ')}
                 />
               ))}
             </div>

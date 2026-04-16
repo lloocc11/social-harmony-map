@@ -22,16 +22,21 @@ const categoryColors: Record<NodeCategory, string> = {
 interface Props {
   node: MindmapNodeData | null;
   onClose: () => void;
+  presentationTextBoost?: boolean;
 }
 
-function ContentBlock({ block }: Readonly<{ block: NodeContentBlock }>) {
+function ContentBlock({ block, fontScale }: Readonly<{ block: NodeContentBlock; fontScale: number }>) {
   if (block.type === 'text') {
-    return <p className="text-sm text-foreground/80 leading-relaxed whitespace-pre-line">{block.text}</p>;
+    return (
+      <p className="text-foreground/80 leading-relaxed whitespace-pre-line" style={{ fontSize: `${1 * fontScale}rem` }}>
+        {block.text}
+      </p>
+    );
   }
 
   if (block.type === 'list') {
     return (
-      <ul className="list-disc pl-5 space-y-2 text-sm text-foreground/85 leading-relaxed">
+      <ul className="list-disc pl-6 space-y-2 text-foreground/85 leading-relaxed" style={{ fontSize: `${1 * fontScale}rem` }}>
         {block.items.map((item) => (
           <li key={item}>{item}</li>
         ))}
@@ -64,7 +69,9 @@ function ContentBlock({ block }: Readonly<{ block: NodeContentBlock }>) {
           />
         </video>
         {(block.caption || block.title) && (
-          <figcaption className="text-xs text-muted-foreground">{block.caption ?? block.title}</figcaption>
+          <figcaption className="text-muted-foreground" style={{ fontSize: `${0.875 * fontScale}rem` }}>
+            {block.caption ?? block.title}
+          </figcaption>
         )}
       </figure>
     );
@@ -84,7 +91,9 @@ function ContentBlock({ block }: Readonly<{ block: NodeContentBlock }>) {
           allowFullScreen
         />
         {(block.caption || block.title) && (
-          <figcaption className="text-xs text-muted-foreground">{block.caption ?? block.title}</figcaption>
+          <figcaption className="text-muted-foreground" style={{ fontSize: `${0.875 * fontScale}rem` }}>
+            {block.caption ?? block.title}
+          </figcaption>
         )}
       </figure>
     );
@@ -101,12 +110,15 @@ function ContentBlock({ block }: Readonly<{ block: NodeContentBlock }>) {
           loading="lazy"
         />
         <div className="flex items-center justify-between gap-2">
-          <figcaption className="text-xs text-muted-foreground">{block.caption ?? block.title}</figcaption>
+          <figcaption className="text-muted-foreground" style={{ fontSize: `${0.875 * fontScale}rem` }}>
+            {block.caption ?? block.title}
+          </figcaption>
           <a
             href={block.src}
             target="_blank"
             rel="noreferrer"
-            className="text-xs font-medium text-primary hover:underline"
+            className="font-medium text-primary hover:underline"
+            style={{ fontSize: `${0.875 * fontScale}rem` }}
           >
             Mở PDF tab mới
           </a>
@@ -122,13 +134,18 @@ function ContentBlock({ block }: Readonly<{ block: NodeContentBlock }>) {
         alt={block.alt}
         className="w-full rounded-xl border border-border object-cover"
       />
-      {block.caption && <figcaption className="text-xs text-muted-foreground">{block.caption}</figcaption>}
+      {block.caption && (
+        <figcaption className="text-muted-foreground" style={{ fontSize: `${0.875 * fontScale}rem` }}>
+          {block.caption}
+        </figcaption>
+      )}
     </figure>
   );
 }
 
-export default function DetailSidebar({ node, onClose }: Readonly<Props>) {
+export default function DetailSidebar({ node, onClose, presentationTextBoost = false }: Readonly<Props>) {
   const pages = node?.detailPages ?? [];
+  const fontScale = presentationTextBoost ? 1.18 : 1;
 
   if (typeof document === 'undefined') {
     return null;
@@ -177,7 +194,7 @@ export default function DetailSidebar({ node, onClose }: Readonly<Props>) {
                   className="w-3 h-3 rounded-full shrink-0"
                   style={{ backgroundColor: categoryColors[node.category] }}
                 />
-                <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+                <span className="text-sm font-semibold uppercase tracking-widest text-muted-foreground">
                   {categoryLabels[node.category]}
                 </span>
               </div>
@@ -190,7 +207,10 @@ export default function DetailSidebar({ node, onClose }: Readonly<Props>) {
                 className="border-l-[3px] pl-4 mb-5"
                 style={{ borderColor: categoryColors[node.category] }}
               >
-                <h2 className="text-base font-bold text-foreground leading-snug whitespace-pre-line">
+                <h2
+                  className="font-bold text-foreground leading-snug whitespace-pre-line"
+                  style={{ fontSize: `${1.5 * fontScale}rem` }}
+                >
                   {node.label}
                 </h2>
               </div>
@@ -199,12 +219,14 @@ export default function DetailSidebar({ node, onClose }: Readonly<Props>) {
                 {pages.map((page) => (
                   <section
                     key={page.id}
-                    className="rounded-2xl border border-border bg-muted/30 p-5"
+                    className="rounded-2xl border border-border bg-muted/30 p-6"
                   >
-                    <h3 className="text-sm font-semibold text-foreground">{page.title}</h3>
+                    <h3 className="font-semibold text-foreground" style={{ fontSize: `${1.125 * fontScale}rem` }}>
+                      {page.title}
+                    </h3>
                     <div className="mt-3 space-y-3">
                       {page.blocks.map((block, index) => (
-                        <ContentBlock key={`${page.id}-${index}`} block={block} />
+                        <ContentBlock key={`${page.id}-${index}`} block={block} fontScale={fontScale} />
                       ))}
                     </div>
                   </section>

@@ -21,8 +21,8 @@ import { nodeDataMap, allNodeIds, type MindmapNodeData } from '@/data/mindmapDat
 const nodeTypes = { radial: RadialNode };
 const edgeTypes = { mindmap: MindmapEdge };
 
-// Sizes per level
-const SIZES = [210, 150, 124, 110];
+// Sizes per level (scaled up for presentation readability)
+const SIZES = [230, 170, 138, 122];
 
 // Radial distances used by the sector-based radial layout.
 const L1_RADIUS = 360;
@@ -56,7 +56,7 @@ function getSize(level: number) {
  * level-2 nodes use outer rings inside each sector, and level-3 nodes extend
  * outward from level-2 to keep each branch readable and separated.
  */
-function buildRadialLayout(collapsed: Set<string>) {
+function buildRadialLayout(collapsed: Set<string>, fontScale: number) {
   const nodes: Node[] = [];
   const edges: Edge[] = [];
   const positions = new Map<string, { x: number; y: number }>();
@@ -92,6 +92,7 @@ function buildRadialLayout(collapsed: Set<string>) {
         hasChildren: (data.children?.length ?? 0) > 0,
         collapsed: collapsed.has(id),
         size,
+        fontScale,
       },
     });
   }
@@ -175,6 +176,7 @@ function MindmapInner() {
   const [collapsed, setCollapsed] = useState<Set<string>>(new Set());
   const [selectedNode, setSelectedNode] = useState<MindmapNodeData | null>(null);
   const [presentationActive, setPresentationActive] = useState(false);
+  const [presentationFontBoost, setPresentationFontBoost] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { fitView } = useReactFlow();
@@ -201,7 +203,8 @@ function MindmapInner() {
   }, []);
 
   useEffect(() => {
-    const { nodes: layoutNodes, edges: layoutEdges } = buildRadialLayout(collapsed);
+    const fontScale = presentationFontBoost ? 1.18 : 1;
+    const { nodes: layoutNodes, edges: layoutEdges } = buildRadialLayout(collapsed, fontScale);
     const withHandlers = layoutNodes.map((n) => ({
       ...n,
       data: {
@@ -213,7 +216,7 @@ function MindmapInner() {
     setNodes(withHandlers);
     setEdges(layoutEdges);
     setTimeout(() => fitView({ padding: 0.15, duration: 400 }), 50);
-  }, [collapsed, setNodes, setEdges, fitView, toggleNodeCollapse, openNodeDetails]);
+  }, [collapsed, presentationFontBoost, setNodes, setEdges, fitView, toggleNodeCollapse, openNodeDetails]);
 
   const expandAll = useCallback(() => setCollapsed(new Set()), []);
   const collapseAll = useCallback(() => {
@@ -264,6 +267,13 @@ function MindmapInner() {
             Trình chiếu
           </span>
         </button>
+        <button
+          onClick={() => setPresentationFontBoost((prev) => !prev)}
+          className={`${btnClass} ${presentationFontBoost ? '!bg-primary !text-primary-foreground !border-primary hover:!bg-primary/90' : ''}`}
+          title="Bật/tắt tăng cỡ chữ khi thuyết trình"
+        >
+          Font +
+        </button>
         <button onClick={resetView} className={btnClass}>Reset View</button>
         <button onClick={expandAll} className={btnClass}>Mở rộng</button>
         <button onClick={collapseAll} className={btnClass}>Thu gọn</button>
@@ -273,9 +283,14 @@ function MindmapInner() {
         active={presentationActive}
         onClose={() => setPresentationActive(false)}
         onExpandNode={expandNode}
+        presentationTextBoost={presentationFontBoost}
       />
 
-      <DetailSidebar node={selectedNode} onClose={() => setSelectedNode(null)} />
+      <DetailSidebar
+        node={selectedNode}
+        onClose={() => setSelectedNode(null)}
+        presentationTextBoost={presentationFontBoost}
+      />
     </div>
   );
 }
