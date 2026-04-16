@@ -167,7 +167,17 @@ interface NodeInteractionConfig {
   - `success: boolean`
   - `message: string`
   - `insight: { rule?: string, tags?: string[], lesson?: string } | null`
+- Chat UI rendering:
+  - Noi dung `message` duoc giu nguyen xuong dong (`whitespace-pre-wrap`).
+  - Neu co block \`\`\`insight ... \`\`\` thi hien thi thanh khung `pre` rieng de tranh vo format.
 
 ### OpenAI key
 - `OPENAI_API_KEY` (recommended)
 - `VITE_OPENAI_API_KEY` (fallback)
+
+### Mandatory response constraints
+- System prompt da bo sung cac rang buoc bat buoc:
+  - Ton trong su ton nghiem trong hinh anh Chu tich Ho Chi Minh.
+  - Bao dam tinh chinh xac ve ban do va chu quyen Viet Nam.
+  - Khi de cap pham chat ca nhan cua Ho Chi Minh phai dung ngon ngu chuan muc, ton trong.
+  - Ton trong cac tu tuong, gia tri van hoa va nen tang chinh tri cua Viet Nam.

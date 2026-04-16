@@ -37,6 +37,25 @@ function genId() {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
+function renderMessageContent(content: string) {
+  const insightRegex = /```insight\s*([\s\S]*?)```/;
+  const match = insightRegex.exec(content);
+
+  if (!match) {
+    return <p className="whitespace-pre-wrap break-words">{content}</p>;
+  }
+
+  const before = content.slice(0, match.index).trim();
+  const after = content.slice(match.index + match[0].length).trim();
+  const cleaned = [before, after].filter(Boolean).join('\n\n').trim();
+
+  if (!cleaned) {
+    return null;
+  }
+
+  return <p className="whitespace-pre-wrap break-words">{cleaned}</p>;
+}
+
 export default function ChatAI({ variant = 'floating', onClose }: Readonly<ChatAIProps>) {
   const [input, setInput] = useState('');
   const [isThinking, setIsThinking] = useState(false);
@@ -174,7 +193,7 @@ export default function ChatAI({ variant = 'floating', onClose }: Readonly<ChatA
                         : 'bg-slate-800 text-slate-100 border border-slate-700',
                     ].join(' ')}
                   >
-                    {message.content}
+                    {renderMessageContent(message.content)}
                   </div>
                 </motion.div>
               );
