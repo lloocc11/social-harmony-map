@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Bomb } from 'lucide-react';
 import type { Tile } from './types';
 
 type Props = {
@@ -30,7 +31,18 @@ export default function TileGrid({ tiles, onPick }: Props) {
           disabled={t.revealed}
           aria-label={`Ô số ${t.index}${t.revealed ? ' (đã mở)' : ''}`}
         >
-          {t.revealed && t.revealResult ? pointsLabel(t.revealResult.points) : t.index}
+          {t.revealed && t.revealResult ? (
+            t.revealResult.kind === 'bomb' ? (
+              <span className="inline-flex flex-col items-center justify-center leading-none gap-1">
+                <Bomb className="h-5 w-5" aria-hidden="true" />
+                <span>{pointsLabel(t.revealResult.points)}</span>
+              </span>
+            ) : (
+              pointsLabel(t.revealResult.points)
+            )
+          ) : (
+            t.index
+          )}
         </Button>
       ))}
     </div>
