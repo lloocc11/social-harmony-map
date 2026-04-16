@@ -81,7 +81,7 @@ export default function Index() {
       <header className="shrink-0 border-b border-border bg-card px-5 py-3 flex items-center gap-4">
         <div className="min-w-[260px]">
           <h1 className="text-sm font-bold text-foreground leading-tight">
-            Mindmap Thuyết trình — Chương 6
+            Mindmap — Chương 6
           </h1>
           <p className="text-xs text-muted-foreground mt-0.5">
             Vấn đề dân tộc và tôn giáo trong thời kỳ quá độ lên CNXH
