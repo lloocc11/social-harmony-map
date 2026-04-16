@@ -148,3 +148,26 @@ interface NodeInteractionConfig {
 - `VITE_FIREBASE_STORAGE_BUCKET`
 - `VITE_FIREBASE_MESSAGING_SENDER_ID`
 - `VITE_FIREBASE_APP_ID`
+
+## ChatAI note
+- Da bo sung component `ChatAI` (fixed bottom-right, dark modern UI) de hoi dap nhanh tren trang mindmap.
+- Component ho tro:
+  - Gui cau hoi bang Enter hoac nut Gui.
+  - Click cau hoi goi y de gui ngay.
+  - Trang thai "Dang suy nghi..." khi dang goi API.
+  - Tu dong scroll xuong tin nhan moi nhat.
+
+### API contract for ChatAI
+- Endpoint: `/api/openai`
+- Method: `POST`
+- Request body:
+  - `message: string`
+  - `history: Array<{ role: 'user' | 'assistant', content: string }>` (optional)
+- Accepted response fields (uu tien theo thu tu):
+  - `success: boolean`
+  - `message: string`
+  - `insight: { rule?: string, tags?: string[], lesson?: string } | null`
+
+### OpenAI key
+- `OPENAI_API_KEY` (recommended)
+- `VITE_OPENAI_API_KEY` (fallback)
